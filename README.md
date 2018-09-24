@@ -1,5 +1,5 @@
 
-[![](https://raw.githubusercontent.com/xclbrio/styleGuide/master/IPFSexcalibur.svg?sanitize=true&width=300)](https://kovan.ipfs.xclbr.io)
+![](https://raw.githubusercontent.com/xclbrio/styleGuide/master/IPFSexcalibur.svg?sanitize=true&width=300)
 
 [![](https://img.shields.io/badge/project-Excalibur__-ef5777.svg?style=popout-square)](https://github.com/xclbrio)
 [![](https://img.shields.io/badge/powered%20by-IPFS-%234A9EA1.svg?style=popout-square)](ipfs.io)
