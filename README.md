@@ -21,8 +21,12 @@ Excalibur IPFS Dist of Web Version
 <br/>
 
 Install dependencies
-```npm install```
+```
+npm install
+```
 <br/>
 
 Build project
-```npm run build```
+```
+npm run build
+```
