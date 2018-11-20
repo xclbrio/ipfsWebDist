@@ -1,4 +1,4 @@
-var simple = require('../tested/script');
+var simple = require('../tested/script.js');
 var expect = require('expect.js');
 
 describe("simple", function(){
