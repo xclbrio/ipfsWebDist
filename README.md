@@ -4,7 +4,7 @@
 [![](https://img.shields.io/badge/powered%20by-IPFS-%234A9EA1.svg?style=popout-square)](ipfs.io)
 ![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg?style=popout-square)
 [![Travis (.com)](https://img.shields.io/travis/com/xclbrio/ipfsWebDist.svg?style=flat-square)](https://travis-ci.com/xclbrio/ipfsWebDist)
-[![Coverage Status](https://coveralls.io/repos/github/xclbrio/ipfsWebDist/badge.svg)](https://coveralls.io/github/xclbrio/ipfsWebDist)
+[![Codecov](https://img.shields.io/codecov/c/github/xclbrio/ipfsWebDist.svg?style=flat-square)](https://codecov.io/gh/xclbrio/ipfsWebDist)
 [![GitHub release](https://img.shields.io/github/release/xclbrio/ipfsWebDist.svg?style=flat-square)](https://github.com/xclbrio/ipfsWebDist/releases)
 
 
