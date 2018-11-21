@@ -33,6 +33,12 @@ Build project
 ```
 npm run build
 ```
+
+Communication channels
+======================
+
+*Gitter chat* https://gitter.im/xclbrio/Lobby
+
 License
 =======
 
