@@ -1,5 +1,6 @@
 ![](https://raw.githubusercontent.com/xclbrio/styleGuide/master/excaliburIPFS.svg?sanitize=true&width=300)
 
+
 [![](https://img.shields.io/badge/project-Excalibur__-ef5777.svg?style=popout-square)](https://github.com/xclbrio)
 [![](https://img.shields.io/badge/powered%20by-IPFS-%234A9EA1.svg?style=popout-square)](https://ipfs.io/)
 [![GitHub](https://img.shields.io/github/license/xclbrio/ipfsWebDist.svg?style=flat-square)](https://github.com/xclbrio/ipfsWebDist/blob/master/LICENSE)
@@ -7,7 +8,7 @@
 [![Codecov](https://img.shields.io/codecov/c/github/xclbrio/ipfsWebDist.svg?style=flat-square)](https://codecov.io/gh/xclbrio/ipfsWebDist)
 [![GitHub release](https://img.shields.io/github/release/xclbrio/ipfsWebDist.svg?style=flat-square)](https://github.com/xclbrio/ipfsWebDist/releases)
 
-
+[![Gitter](https://img.shields.io/gitter/room/:user/:repo.svg?style=flat-square)](https://gitter.im/xclbrio/Lobby)
 
 Excalibur IPFS Dist of Web Version
 <br/><br/>
