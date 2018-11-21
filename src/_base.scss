@@ -1,0 +1,99 @@
+$black: #121212;
+$black-two: #121212;
+$black-three: #202020;
+$black-four: #282828;
+$grapefruit: #ff5e57;
+$white: #ffffff;
+$medium-pink: #ef5777;
+$algae-green: #1fbe5c;
+$greyish-brown: #474747;
+$dark-periwinkle: #6c81d3;
+$warm-grey: #7a7a7a;
+$indigo: #690496;
+$greyish: #aeaeae;
+
+
+.greyish{
+  color: $greyish;
+}
+
+/* Text styles */
+
+@mixin Text-Style {
+  font-family: "Roboto Mono";
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  color: $white;
+}
+
+@mixin Text-Style-2 {
+  font-family: "Roboto Mono";
+  font-size: 17px;
+  font-weight: bold;
+  text-align: center;
+  color: $white;
+}
+
+@mixin Text-Style-3 {
+  font-family: "Roboto Mono";
+  font-size: 19px;
+  font-weight: bold;
+  color: $white;
+}
+
+@mixin Text-Style-4 {
+  font-family: "Roboto Mono";
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  color: $medium-pink;
+}
+
+@mixin Text-Style-5 {
+  font-family: "Roboto Mono";
+  font-size: 14px;
+  font-weight: bold;
+  color: $greyish;
+}
+
+@mixin Text-Style-6 {
+  font-family: "Roboto Mono";
+  font-size: 14px;
+  color: $white;
+}
+
+@mixin Text-Style-7 {
+  font-family: "Roboto Mono";
+  font-size: 12px;
+  font-weight: bold;
+  color: $white;
+}
+
+@mixin Text-Style-8 {
+  font-family: "Roboto Mono";
+  font-size: 17px;
+  font-weight: bold;
+  color: $grapefruit;
+}
+
+@mixin Text-Style-9 {
+  font-family: "Roboto Mono";
+  font-size: 14px;
+  font-weight: bold;
+  color: $grapefruit;
+}
+
+@mixin Text-Style-10 {
+  font-family: "Roboto Mono";
+  font-size: 17px;
+  font-weight: bold;
+  color: $warm-grey;
+}
+
+@mixin Text-Style-11 {
+  font-family: "Roboto Mono";
+  font-size: 14px;
+  font-weight: bold;
+  color: $white;
+}
