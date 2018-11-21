@@ -30,3 +30,8 @@ Build project
 ```
 npm run build
 ```
+
+License
+=======
+
+``ipfsWebDist`` is offered under the Apache 2 license.
