@@ -7,7 +7,6 @@
 [![Travis (.com)](https://img.shields.io/travis/com/xclbrio/ipfsWebDist.svg?style=flat-square)](https://travis-ci.com/xclbrio/ipfsWebDist)
 [![Codecov](https://img.shields.io/codecov/c/github/xclbrio/ipfsWebDist.svg?style=flat-square)](https://codecov.io/gh/xclbrio/ipfsWebDist)
 [![GitHub release](https://img.shields.io/github/release/xclbrio/ipfsWebDist.svg?style=flat-square)](https://github.com/xclbrio/ipfsWebDist/releases)
-
 [![Gitter](https://img.shields.io/gitter/room/:user/:repo.svg?style=flat-square)](https://gitter.im/xclbrio/Lobby)
 
 Excalibur IPFS Dist of Web Version
@@ -21,6 +20,9 @@ Excalibur IPFS Dist of Web Version
 <br/>
 <br/>
 
+Getting started
+=======
+
 Install dependencies
 ```
 npm install
@@ -31,7 +33,6 @@ Build project
 ```
 npm run build
 ```
-
 License
 =======
 
