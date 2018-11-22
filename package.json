@@ -7,7 +7,7 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit",
-     "test": "istanbul cover node_modules/mocha/bin/_mocha && codecov"
+    "test": "istanbul cover node_modules/mocha/bin/_mocha && codecov"
   },
   "dependencies": {
     "animejs": "^2.2.0",
