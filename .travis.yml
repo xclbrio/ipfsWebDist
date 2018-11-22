@@ -4,8 +4,5 @@ node_js:
   - 10
 install:
   - npm install
-  - npm install -g codecov
-  - npm install -g istanbul
 script:
-  #- npm run test:unit
-  - istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && codecov
+  - npm run test
