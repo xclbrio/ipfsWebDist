@@ -8,5 +8,5 @@ install:
   - npm install -g istanbul
 script:
   - npm run test:unit
-  - istanbul cover ./node_modules/mocha/bin/_mocha --reporter lcovonly -- -R spec
+  - istanbul cover
   - codecov
