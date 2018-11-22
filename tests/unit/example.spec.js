@@ -1,12 +1,13 @@
 import { expect } from 'chai'
 import { mount } from '@vue/test-utils'
-import workflow from '@/components/workflow.vue'
+import app from '@/App.vue'
 
-
-const wrapper = mount(workflow)
-
-
-console.log(wrapper)
-
-
-   
+describe('app.vue', () => {
+  it('renders props.msg when passed', () => {
+    const msg = 'new message'
+    const wrapper = mount(app, {
+      propsData: { msg }
+    })
+    expect(wrapper.text())
+  })
+})   
