@@ -6,8 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "test:unit": "vue-cli-service test:unit",
-    "test": "istanbul cover node_modules/mocha/bin/_mocha && codecov"
+    "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
     "animejs": "^2.2.0",
@@ -33,10 +32,7 @@
     "node-sass": "^4.10.0",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.21.0",
-    "vue-template-compiler": "^2.5.16",
-    "istanbul": "^0.4.5",
-    "mocha": "^5.2.0",
-    "codecov": "^3.1.0"
+    "vue-template-compiler": "^2.5.16"
   },
   "eslintConfig": {
     "root": true,
