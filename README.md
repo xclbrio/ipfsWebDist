@@ -41,7 +41,8 @@ Changes for each release are documented in the [release notes](https://github.co
 Communication channels
 ======================
 
-Gitter chat https://gitter.im/xclbrio/Lobby
+Email: support@xclbr.io
+Gitter chat: https://gitter.im/xclbrio/Lobby
 
 Issues
 =======
