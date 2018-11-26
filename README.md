@@ -34,10 +34,23 @@ Build project
 npm run build
 ```
 
+Changelog
+============
+Changes for each release are documented in the [release notes](https://github.com/xclbrio/ipfsWebDist/releases) + [CHANGELOG.md](https://github.com/xclbrio/ipfsWebDist/blob/master/CHANGELOG.md)
+
 Communication channels
 ======================
 
-*Gitter chat* https://gitter.im/xclbrio/Lobby
+Email: support@xclbr.io
+
+Gitter chat: https://gitter.im/xclbrio/Lobby
+
+Issues
+=======
+
+[Issues page](https://github.com/xclbrio/ipfsWebDist/issues) for reports
+
+Please make sure to read the [ISSUE TEMPLATE](https://github.com/xclbrio/ipfsWebDist/blob/master/.github/ISSUE_TEMPLATE/bug_report.md) before opening an issue.
 
 License
 =======
