@@ -35,7 +35,6 @@
       try {
         this.contract = exchange.initContract(web3, settings.exchangeAbi, settings.contractAddress);
       } catch(e) {
-        console.log(e);
       }
 
       setInterval(function () {
