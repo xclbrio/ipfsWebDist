@@ -3,23 +3,18 @@
 		<transition name="fade">
 			<loader v-show="preLoader"></loader>
 		</transition>
-		<keep-alive>
-			<headerMain
-				:from="from"
-				:pair="pair"
-			></headerMain>
-		</keep-alive>
 		<main class="workflow">
-			<aside class="aside-left">
-				<orederbook
-					:pair="pair"
+			<keep-alive>
+				<headerMain
 					:from="from"
-					:contract="contract"
-				></orederbook>
-
-			</aside>
-
-		<section class="main-section charts">
+					:pair="pair"
+				></headerMain>
+			</keep-alive>
+			<orederbook
+				:pair="pair"
+				:from="from"
+				:contract="contract"
+			></orederbook>
 			
 			<div class="window charts-tabs">
 				<vue-tabs>
@@ -38,15 +33,12 @@
 				:pair="pair"
 				:from="from">
 			</history>
-		</section>
-			<aside class="aside-right">
-				<forms 
-					ref="forms"
-					:pair="pair"
-					:from="from" >
-				</forms>
-				<chat :from="from" :web3="web3" ref="chat"></chat>
-			</aside>
+			<forms 
+				ref="forms"
+				:pair="pair"
+				:from="from" >
+			</forms>
+			<chat :from="from" :web3="web3" ref="chat"></chat>
 		</main>
 	</div>
 </template>
@@ -95,14 +87,14 @@
 			},
 			privateKey(){
 				const vm = this;
-				return this.walletType ? '' : vm.currentAccount.privateKey;
+				return vm.walletType ? '' : vm.currentAccount.privateKey;
 			},
 			walletType(){
 				return this.from == this.metamaskAccount
 			},
 			contract(){
 				const vm = this;
-				return new this.web3.eth.Contract(settings.exchangeAbi, settings.exchangeAddress);
+				return new vm.web3.eth.Contract(settings.exchangeAbi, settings.exchangeAddress);
 			},
 			room(){
 				return {
@@ -168,7 +160,7 @@
 		created(){
 			var vm = this;
 
-			this.$socket.emit('joinRoom', vm.room);
+			vm.$socket.emit('joinRoom', vm.room);
 
 			vm.accounts = vm.getAccounts();
 
@@ -248,15 +240,6 @@
 			margin: 0; 
 		}
 	}
-	.window{
-		padding: 14px 5px 5px 5px;
-		background-color: $black-three;
-		color: #fff;
-		border: 1px solid  $black;
-		box-sizing: border-box;
-		transition: 0.8s;
-		overflow: hidden;
-	}
 	.charts{
 		width: 100%;
 		display: flex;
@@ -267,11 +250,41 @@
 		display: flex;
 	}
 	.workflow{
-		display: flex;
-		justify-content: space-between;
+		display: grid;
 		height: 100vh;
-		padding-top: 50px;
+		grid-gap: 1px;
+		grid-template-columns: 378px  1fr  378px;
+		grid-template-rows:	46px 6fr 4fr;
+		grid-template-areas: "he he he" "od	ct fo" "od	hi ch";
 		box-sizing: border-box;
+	}
+
+	.header{
+		grid-area: he;
+	}
+	.orederbook{
+		grid-area: od;
+	}
+	.charts-tabs{
+		grid-area: ct;
+	}
+	.history{
+		grid-area: hi;
+	}
+	.forms{
+		grid-area: fo;
+	}
+	.chat{
+		grid-area: ch;
+	}
+	.window{
+		padding: 14px 5px 5px 5px;
+		background-color: $black-three;
+		color: #fff;
+		border: 1px solid  $black;
+		box-sizing: border-box;
+		transition: 0.8s;
+		overflow: hidden;
 	}
 	.aside-left,
 	.aside-right{
