@@ -95,14 +95,14 @@
 			},
 			privateKey(){
 				const vm = this;
-				return this.walletType ? '' : vm.currentAccount.privateKey;
+				return vm.walletType ? '' : vm.currentAccount.privateKey;
 			},
 			walletType(){
 				return this.from == this.metamaskAccount
 			},
 			contract(){
 				const vm = this;
-				return new this.web3.eth.Contract(settings.exchangeAbi, settings.exchangeAddress);
+				return new vm.web3.eth.Contract(settings.exchangeAbi, settings.exchangeAddress);
 			},
 			room(){
 				return {
@@ -168,7 +168,7 @@
 		created(){
 			var vm = this;
 
-			this.$socket.emit('joinRoom', vm.room);
+			vm.$socket.emit('joinRoom', vm.room);
 
 			vm.accounts = vm.getAccounts();
 
@@ -248,15 +248,6 @@
 			margin: 0; 
 		}
 	}
-	.window{
-		padding: 14px 5px 5px 5px;
-		background-color: $black-three;
-		color: #fff;
-		border: 1px solid  $black;
-		box-sizing: border-box;
-		transition: 0.8s;
-		overflow: hidden;
-	}
 	.charts{
 		width: 100%;
 		display: flex;
@@ -272,6 +263,15 @@
 		height: 100vh;
 		padding-top: 50px;
 		box-sizing: border-box;
+	}
+	.window{
+		padding: 14px 5px 5px 5px;
+		background-color: $black-three;
+		color: #fff;
+		border: 1px solid  $black;
+		box-sizing: border-box;
+		transition: 0.8s;
+		overflow: hidden;
 	}
 	.aside-left,
 	.aside-right{
