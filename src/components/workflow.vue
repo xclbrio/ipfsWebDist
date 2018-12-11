@@ -1,7 +1,7 @@
 <template>
-	<div>
+	<main>
 		<transition name="fade">
-			<loader v-show="preLoader"></loader>
+			<loader v-if="preLoader"></loader>
 		</transition>
 		<main class="workflow">
 			<keep-alive>
@@ -40,18 +40,15 @@
 			</forms>
 			<chat :from="from" :web3="web3" ref="chat"></chat>
 		</main>
-	</div>
+	</main>
 </template>
 
 <script>
 	import exchange from '../exchange.js'
 	import settings from '../settings.json'
-
 	import Tx from 'ethereumjs-tx'
 	import EthUtil from 'ethereumjs-util'
-
 	import {VueTabs, VTab} from 'vue-nav-tabs'
-
 	import headerMain from './header.vue'
 	import orederbook from './orederbook.vue'
 	import history from './history.vue'
@@ -125,7 +122,7 @@
 
 			},
 			trade(trade) {
-			console.log('trade:', trade);
+				console.log('trade:', trade);
 			}
 		},
 		watch: {

@@ -33,22 +33,6 @@
 				<li class="header__navi-item"><a target="_blank" @click.prevent href="">twitter</a></li>
 				<li class="header__navi-item"><a target="_blank" @click.prevent href="">telegram</a></li>
 			</ul>
-
-			<!-- <div class="header__langswitcher">
-				<div class="lang-switcher">EN <span>
-					<svg id="SVGDoc" width="14" height="7" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:avocode="https://avocode.com/" viewBox="0 0 14 7">
-						<defs>
-							<path d="M283,20l-7,7l-7,-7v0" id="Path-0"/>
-							<clipPath id="ClipPath1016"><use xlink:href="#Path-0" fill="#ffffff"/></clipPath>
-						</defs>
-						<g transform="matrix(1,0,0,1,-269,-20)">
-							<use xlink:href="#Path-0" fill-opacity="0" fill="#ffffff" stroke-linejoin="miter" stroke-linecap="butt" stroke-opacity="1" stroke="#aeaeae" stroke-miterlimit="50" stroke-width="2" clip-path="url(&quot;#ClipPath1016&quot;)"/>
-						</g>
-					</svg>
-				</span>
-			</div>
-		</div>
- -->
 			<div class="apps">
 				<div class="apps__item wallets">
 					<img v-if="$parent.walletType == false && localAccounts.length > 0" src="../assets/wallet-white.svg" alt="">

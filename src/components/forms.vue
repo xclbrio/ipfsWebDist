@@ -6,13 +6,13 @@
 					<form class="forms__box form__buy">
 						<div class="form__buy__amount">
 							<p class="input__title">AMOUNT</p>
-							<p class="input__contaner --amount"><input v-model="buyAmount" placeholder="amount_" type="number" step="any"><span class="symbol-toolkit">{{pair.symbols[0]}}</span></p>
+							<p class="input__contaner --amount"><input v-model="buyAmount" placeholder="amount_" type="number" step="0.001"><span class="symbol-toolkit">{{pair.symbols[0]}}</span></p>
 						</div>
 						<div class="form__buy__price">
 							<p class="input__title">PRICE</p>
-							<p class="input__contaner --price"><input @click="updatePrice = false" onClick="this.select();" v-model="buyPrice" placeholder="price_" type="number" step="any"><span class="symbol-toolkit">{{pair.symbols[1]}}</span></p>
+							<p class="input__contaner --price"><input @click="updatePrice = false" onClick="this.select();" v-model="buyPrice" placeholder="price_" type="number" step="0.001"><span class="symbol-toolkit">{{pair.symbols[1]}}</span></p>
 						</div>
-						<p class="--greyish">TOTAL = <span class="--white">{{buyTotal}}</span> {{pair.symbols[1].toUpperCase()}}</p>
+						<p class="--greyish">TOTAL = <span class="--white">{{buyTotal.noExponents()}}</span> {{pair.symbols[1].toUpperCase()}}</p>
 						<p class="--greyish">CHOOSE EXPIRES: 
 							<span v-for="item in expires">
 								<input class="radio-btn" type="radio" :id="item.title" :value="item.blockAmount" v-model="picked">
@@ -29,13 +29,13 @@
 					<form class="forms__box form__sell">
 						<div class="form__buy__amount">
 							<p class="input__title">AMOUNT</p>
-							<p class="input__contaner --amount"><input v-model="sellAmount" placeholder="amount_" type="number" step="any"><span class="symbol-toolkit">{{pair.symbols[0]}}</span></p>
+							<p class="input__contaner --amount"><input v-model="sellAmount" placeholder="amount_" type="number" step="0.001"><span class="symbol-toolkit">{{pair.symbols[0]}}</span></p>
 						</div>
 						<div class="form__buy__price">
 							<p class="input__title">PRICE</p>
-							<p class="input__contaner --price"><input @click="updatePrice = false" onClick="this.select();" v-model="sellPrice" placeholder="price_" type="number" step="any"><span class="symbol-toolkit">{{pair.symbols[1]}}</span></p>
+							<p class="input__contaner --price"><input @click="updatePrice = false" onClick="this.select();" v-model="sellPrice" placeholder="price_" type="number" step="0.001"><span class="symbol-toolkit">{{pair.symbols[1]}}</span></p>
 						</div>
-						<p class="--greyish">TOTAL = <span class="--white">{{sellTotal}}</span> {{pair.symbols[1].toUpperCase()}}</p>
+						<p class="--greyish">TOTAL = <span class="--white">{{sellTotal.noExponents()}}</span> {{pair.symbols[1].toUpperCase()}}</p>
 						<p class="--greyish">CHOOSE EXPIRES: 
 							<span v-for="item in expires">
 								<input class="radio-btn" type="radio" :id="item.title" :value="item.blockAmount" v-model="picked">
@@ -59,7 +59,7 @@
 								:class="{active: depositToken == item.token}"  
 								class="expries " 
 								:for="item.name">{{item.name}}</label></span>[choose currency]</p>
-								<p class="input__contaner --amount"><input v-model="depositAmount" placeholder="amount_" type="number" step="any"><button @click.prevent="deposit" class="btn btn_deposit">SEND</button></p>
+								<p class="input__contaner --amount"><input v-model="depositAmount" placeholder="amount_" type="number" step="0.001"><button @click.prevent="deposit" class="btn btn_deposit">SEND</button></p>
 						</div>
 					</form>
 					<form class="forms__box form__manage">
@@ -73,7 +73,7 @@
 								:class="{active: withdrawToken == item.token}" 
 								class="expries" 
 								:for="item.token">{{item.name}}</label></span>[choose currency]</p>
-							<p class="input__contaner --amount"><input v-model="withdrawAmount" placeholder="amount_" type="number" step="any"><button @click.prevent="withdrawAlert" class="btn btn_deposit">SEND</button></p>
+							<p class="input__contaner --amount"><input v-model="withdrawAmount" placeholder="amount_" type="number" step="0.001"><button @click.prevent="withdrawAlert" class="btn btn_deposit">SEND</button></p>
 						</div>
 					</form>
 				</div>
@@ -209,11 +209,11 @@
 	        },
 			buyTotal(){
 				var res = this.buyAmount * this.buyPrice;
-				return +res.toFixed(10);
+				return +res.toFixed(6);
 			},
 			sellTotal(){
 				var res = this.sellAmount * this.sellPrice; 
-				return +res.toFixed(10);
+				return +res.toFixed(6);
 			},
 		},
 		watch: {
