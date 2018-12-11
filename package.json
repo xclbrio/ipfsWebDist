@@ -21,7 +21,8 @@
     "vue-nav-tabs": "^0.5.7",
     "vue-resource": "^1.5.1",
     "vue-router": "^3.0.1",
-    "vue-socket.io": "^2.1.1-b"
+    "vue-socket.io": "^2.1.1-b",
+    "web3": "^1.0.0-beta.36"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.0.0-beta.15",
@@ -31,12 +32,12 @@
     "@vue/test-utils": "^1.0.0-beta.25",
     "chai": "^4.1.2",
     "codecov": "^3.1.0",
+    "electron": "^3.0.10",
     "istanbul": "^0.4.5",
     "node-sass": "^4.10.0",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.21.0",
-    "vue-template-compiler": "^2.5.16",
-    "web3": "^1.0.0-beta.36"
+    "vue-template-compiler": "^2.5.16"
   },
   "eslintConfig": {
     "root": true,
