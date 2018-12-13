@@ -33,6 +33,11 @@ Build project
 npm run build
 ```
 
+Start local server
+```
+npm run serve
+```
+
 Changelog
 ============
 Changes for each release are documented in the [release notes](https://github.com/xclbrio/ipfsWebDist/releases) + [CHANGELOG.md](https://github.com/xclbrio/ipfsWebDist/blob/master/CHANGELOG.md)
