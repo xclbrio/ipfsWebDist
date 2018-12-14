@@ -189,7 +189,6 @@
 				return this.ordersList.filter(element => element.orderType == 1 || element.orderType == 'buy').sort((a, b) => b.price - a.price);
 			},
 			sell(){
-				const vm = this;
 				return this.listSell[vm.listSell.length - 1].price;
 			},
 			buy(){
@@ -222,13 +221,11 @@
 		},
 		sockets: {
 			pushOrder(pushOrder) {
-				console.log('pushOrder:', pushOrder);
 				this.ordersList.push(pushOrder)
 			},
 			ordersCollection(ordersCollection) {
 				const vm = this;
 				vm.ordersList = ordersCollection._items;
-				console.log('ordersCollection:', ordersCollection._items);
 			},
 
 			trade(trade) {
@@ -239,7 +236,6 @@
 				}
 			},
 			cancel(cancel) {
-				console.log('cancel: ' + cancel)
 				this.ordersList = this.ordersList.filter(function(element) {
 					return element.hash.toLowerCase() !== cancel.toLowerCase()
 				});
@@ -278,7 +274,7 @@
 					var data = vm.listBuy[i]
 
 					vm.orderData = {
-						orderFills: web3.utils.fromWei(data.orderFills.toString()),
+						orderFills: vm.web3.utils.fromWei(data.orderFills.toString()),
 						price:  data.price,
 
 					}
@@ -287,7 +283,7 @@
 				}else{
 					var data = vm.listSell[i]
 					vm.orderData = {
-						orderFills: Number(web3.utils.fromWei(((data.orderFills * data.amountGive) / data.amountGet).toString())).toFixed(6),
+						orderFills: Number(vm.web3.utils.fromWei(((data.orderFills * data.amountGive) / data.amountGet).toString())).toFixed(6),
 						price: (data.amountGet / data.amountGive).toFixed(6),
 					}
 
@@ -319,27 +315,25 @@
 				e.preventDefault()
 				const vm = this;
 				if(vm.order.orderType == 'buy') {
-					vm.orderData.amount = web3.utils.toWei((vm.order.amount * vm.order.price).toFixed(10).toString());
+					vm.orderData.amount = vm.web3.utils.toWei((vm.order.amount * vm.order.price).toFixed(10).toString());
 				}else{
-					vm.orderData.amount = web3.utils.toWei(Number(vm.order.amount).toFixed(10).toString());
+					vm.orderData.amount = vm.web3.utils.toWei(Number(vm.order.amount).toFixed(10).toString());
 				}
-				// console.log([vm.from.toLowerCase(), vm.order.tokenGet, vm.order.amountGet, vm.order.tokenGive, vm.order.amountGive, vm.order.expires, vm.order.nonce, vm.order.user, vm.order.v, vm.order.r, vm.order.s, vm.order.amount * 10**18, vm.pair.path])
-				console.log([vm.order.tokenGet, vm.order.amountGet, vm.order.tokenGive, vm.order.amountGive, vm.order.expires, vm.order.nonce, vm.order.user, vm.order.v, vm.order.r, vm.order.s, vm.orderData.amount, vm.pair.path])
 
-				console.log(typeof vm.orderData.amount)
 				if (vm.$parent.walletType) {
-					await exchange.trade(vm.contract, vm.from, vm.order.tokenGet, web3.utils.numberToHex(vm.order.amountGet), vm.order.tokenGive, web3.utils.numberToHex(vm.order.amountGive), vm.order.expires, vm.order.nonce, vm.order.user, vm.order.v, vm.order.r, vm.order.s, web3.utils.numberToHex(vm.orderData.amount), vm.pair.path,
+					await exchange.trade(vm.contract, vm.from, vm.order.tokenGet, vm.web3.utils.numberToHex(vm.order.amountGet), vm.order.tokenGive, vm.web3.utils.numberToHex(vm.order.amountGive), vm.order.expires, vm.order.nonce, vm.order.user, vm.order.v, vm.order.r, vm.order.s, vm.web3.utils.numberToHex(vm.orderData.amount), vm.pair.path,
 						function(h) {
 							vm.txhash = String(h);
 							if (vm.txhash !== "undefined") {
 								vm.popup = true
 							}
 					}).then(res => {
+
 						vm.buyFrom = false;
 					}, err => console.log(err))
 				}else{
 					EthUtil.toBuffer(vm.order.amountGet)
-					await exchangeLocal.trade(vm.contract, Tx, settings.exchangeAddress, vm.from, vm.$parent.privateKeyBuffer, 5, 0, vm.order.tokenGet, web3.utils.numberToHex(vm.order.amountGet), vm.order.tokenGive, web3.utils.numberToHex(vm.order.amountGive), vm.order.expires, vm.order.nonce, vm.order.user, vm.order.v, vm.order.r, vm.order.s, web3.utils.numberToHex(vm.orderData.amount), vm.pair.path, function(h){
+					await exchangeLocal.trade(vm.contract, Tx, settings.exchangeAddress, vm.from, vm.$parent.privateKeyBuffer, 5, 0, vm.order.tokenGet, vm.web3.utils.numberToHex(vm.order.amountGet), vm.order.tokenGive, vm.web3.utils.numberToHex(vm.order.amountGive), vm.order.expires, vm.order.nonce, vm.order.user, vm.order.v, vm.order.r, vm.order.s, vm.web3.utils.numberToHex(vm.orderData.amount), vm.pair.path, function(h){
 
 						vm.txhash = String(h);
 						if (vm.txhash !== "undefined") {
@@ -362,21 +356,19 @@
 			getFiat(){
 				const vm = this;
 				this.$http.get(`https://api.coinmarketcap.com/v1/ticker/${vm.pair.fullName[0]}/`).then(res => {
-					console.log(res)
 					vm.fiat = res.body[0].price_usd
 				})
 			},
 			toCancelOrder(i){
 				const vm = this;
-
 				if (vm.personalOrders[i].orderType == 'buy') {
 					vm.personalOrders[i].orderBody = {
-						amount: web3.utils.fromWei(String(vm.personalOrders[i].orderFills)),
+						amount: vm.web3.utils.fromWei(String(vm.personalOrders[i].orderFills)),
 						price: vm.personalOrders[i].price.toFixed(6),
 					}
 				}else{
 					vm.personalOrders[i].orderBody = {
-						amount: web3.utils.fromWei(String((vm.personalOrders[i].orderFills * vm.personalOrders[i].amountGive) / vm.personalOrders[i].amountGet)),
+						amount: vm.web3.utils.fromWei(String((vm.personalOrders[i].orderFills * vm.personalOrders[i].amountGive) / vm.personalOrders[i].amountGet)),
 						price: (vm.personalOrders[i].amountGet / vm.personalOrders[i].amountGive).toFixed(6),
 					}
 				}
@@ -387,22 +379,20 @@
 				vm.cancelForm = true;
 
 			},
-			cancelOrder: async function(i){
+			cancelOrder: async function(){
 				const vm = this;
-				let data = this.cancelOrderData;
+				let data = vm.cancelOrderData;
 				let rsv = exchange.rsv(vm.web3, data.sig);
 
-				console.log([vm.contract, vm.from, data.tokenGet, data.amountGet, data.tokenGive, data.amountGive, data.expires, data.nonce, rsv.v, rsv.r, rsv.s, vm.pair.path]);
 				if (vm.$parent.walletType) {
-
-					await exchange.cancelOrder(vm.contract, vm.from, data.tokenGet, web3.utils.numberToHex(data.amountGet), data.tokenGive, web3.utils.numberToHex(data.amountGive), data.expires, data.nonce, rsv.v, rsv.r, rsv.s, vm.pair.path, function(h){
+					await exchange.cancelOrder(vm.contract, vm.from, data.tokenGet, vm.web3.utils.numberToHex(data.amountGet), data.tokenGive, vm.web3.utils.numberToHex(data.amountGive), data.expires, data.nonce, rsv.v, rsv.r, rsv.s, vm.pair.path, function(h){
 						vm.txhash = String(h);
 						if (vm.txhash !== "undefined") {
 							vm.popup = true
 						}
 					})
 				}else{
-					await exchangeLocal.cancel(vm.contract, Tx, settings.exchangeAddress, vm.from, vm.$parent.privateKeyBuffer, 5, 0, data.tokenGet, web3.utils.numberToHex(data.amountGet), data.tokenGive, web3.utils.numberToHex(data.amountGive), data.expires, data.nonce, rsv.v, rsv.r, rsv.s, vm.pair.path, function(h){
+					await exchangeLocal.cancel(vm.contract, Tx, settings.exchangeAddress, vm.from, vm.$parent.privateKeyBuffer, 5, 0, data.tokenGet, vm.web3.utils.numberToHex(data.amountGet), data.tokenGive, vm.web3.utils.numberToHex(data.amountGive), data.expires, data.nonce, rsv.v, rsv.r, rsv.s, vm.pair.path, function(h){
 							vm.txhash = String(h);
 							if (vm.txhash !== "undefined") {
 								vm.popup = true
@@ -413,17 +403,16 @@
 					vm.cancelForm = false;
 				}, 3000)
 			},
-	    },
-	    created() {
-	    	var vm = this;
+		},
+		created() {
+			var vm = this;
 			vm.getFiat();
-	    },
+		},
 	}
 </script>
 
 <style lang="scss">
 	@import '../_base.scss';
-
 	.ipfs{
 		font-size: 10px;
 		display: flex;
@@ -474,12 +463,12 @@
 			@include Text-Style-5;
 		}
 		button.copy{
-		    padding: 9px;
-    		line-height: 0;
-    		background-color: $black-three;
+			padding: 9px;
+			line-height: 0;
+			background-color: $black-three;
 			border: solid 1px $black-two;
-    		cursor: pointer;
-    		outline: none;
+			cursor: pointer;
+			outline: none;
 		}
 	}
 	.total{
@@ -603,10 +592,10 @@
 		height: 445px;
 		overflow: scroll;
 		-ms-overflow-style: none;  // IE 10+
-    	overflow: -moz-scrollbars-none;  // Firefox
-    	&::-webkit-scrollbar { 
-    		display: none;
-    	}
+		overflow: -moz-scrollbars-none;  // Firefox
+		&::-webkit-scrollbar { 
+			display: none;
+		}
 
 	}
 	.orederbook__spread{

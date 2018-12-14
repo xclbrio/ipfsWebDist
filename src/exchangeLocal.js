@@ -6,8 +6,6 @@ export default {
 		contractFunction_.estimateGas({ from: account_ }).then((gasAmount) => {
 			estimatedGas = gasAmount.toString(16);
 
-			console.log("Estimated gas: " + estimatedGas);
-
 			web3.eth.getTransactionCount(account_).then(_nonce => {
 				nonce = _nonce.toString(16);
 
@@ -31,7 +29,6 @@ export default {
 
 				web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex')).once('transactionHash', function(hash){ 
 					getHash(hash)
-					console.log(hash);
 				}).then(receipt => {
 					callback(receipt);
 				}).catch(err => console.log(err));
@@ -57,7 +54,6 @@ export default {
 		const depositFunction = exchangeContract_.methods.depositToken(tokenAddress_, amount_);
 		const depositAbi = depositFunction.encodeABI();
 		vm.signAndSend(tx_, approveFunction, approveAbi, tokenAddress_, account_, pkey_, gasPrice_, value_, getHash, function(res){
-			console.log(res);
 			vm.signAndSend(tx_, depositFunction, depositAbi, exchangeAddress_, account_, pkey_, gasPrice_, value_, getHash, res => console.log(res));
 		});
 	},
@@ -71,11 +67,7 @@ export default {
 		const vm = this;
 		const tradeFunction = exchangeContract_.methods.trade(tokenGet_, amountGet_, tokenGive_, amountGive_, expires_, nonce_, user_, v_, r_, s_, amount_, pair_);
 		const tradeAbi = tradeFunction.encodeABI();
-
-		console.log(tradeFunction)
-		vm.signAndSend(tx_, tradeFunction, tradeAbi, exchangeAddress_, account_, pkey_, gasPrice_, value_, gethash, function(res){
-			console.log(res);
-		});
+		vm.signAndSend(tx_, tradeFunction, tradeAbi, exchangeAddress_, account_, pkey_, gasPrice_, value_, gethash, res => {console.log(res)});
 	},
 	cancel(exchangeContract_, tx_, exchangeAddress_, account_, pkey_, gasPrice_, value_, tokenGet_, amountGet_, tokenGive_, amountGive_, expires_, nonce_, v_, r_, s_, pair, callback){
 		const vm = this;
