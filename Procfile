@@ -1,1 +1,1 @@
-web: npm install -g @vue/cli && npm run serve
+web: npm run build
