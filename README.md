@@ -58,4 +58,4 @@ Please make sure to read the [ISSUE TEMPLATE](https://github.com/xclbrio/ipfsWeb
 License
 =======
 
-``ipfsWebDist`` is offered under the Apache 2 license.
+[Apache v2.0](https://github.com/xclbrio/ipfsWebDist/blob/master/LICENSE.md) © 2018 ExcaliburAlpha OÜ
