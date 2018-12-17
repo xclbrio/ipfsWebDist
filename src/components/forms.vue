@@ -1,25 +1,25 @@
 	<template>
-	<div class="window forms">
+	<div @click="slideDownChat" class="window forms">
 		<vue-tabs>
 			<v-tab title="BUY">
 				<div class="forms__content">
 					<form class="forms__box form__buy">
 						<div class="form__buy__amount">
 							<p class="input__title">AMOUNT</p>
-							<p class="input__contaner --amount"><input v-model="buyAmount" placeholder="amount_" type="number" step="0.001"><span class="symbol-toolkit">{{pair.symbols[0]}}</span></p>
+							<p class="input__contaner --amount"><input v-model="buyAmount" placeholder="amount_" type="number" step="any"><span class="symbol-toolkit">{{pair.symbols[0]}}</span></p>
 						</div>
 						<div class="form__buy__price">
 							<p class="input__title">PRICE</p>
-							<p class="input__contaner --price"><input @click="updatePrice = false" onClick="this.select();" v-model="buyPrice" placeholder="price_" type="number" step="0.001"><span class="symbol-toolkit">{{pair.symbols[1]}}</span></p>
+							<p class="input__contaner --price"><input @click="updatePrice = false" onClick="this.select();" v-model="buyPrice" placeholder="price_" type="number" step="any"><span class="symbol-toolkit">{{pair.symbols[1]}}</span></p>
 						</div>
-						<p class="--greyish">TOTAL = <span class="--white">{{buyTotal.noExponents()}}</span> {{pair.symbols[1].toUpperCase()}}</p>
+						<p class="--greyish">TOTAL = <span class="--white">{{buyTotal}}</span> {{pair.symbols[1].toUpperCase()}}</p>
 						<p class="--greyish">CHOOSE EXPIRES: 
 							<span v-for="item in expires">
 								<input class="radio-btn" type="radio" :id="item.title" :value="item.blockAmount" v-model="picked">
 								<label :class="{active: picked == item.blockAmount}" class="expries " :for="item.title">{{item.title}}</label>
 							</span>
 						</p>
-						<p class="button-container"><button :disabled="buyLoader" @click.prevent="postOrder(token1, token2, buyAmount, buyTotal, 1)" class="button"><img v-if="buyLoader" class="button__loader" src="../assets/loader.svg" alt=""><span v-else class="button__text">PLACE BUY ORDER</span></button></p>
+						<p class="button-container"><button @click.prevent="postOrder(token1, token2, buyAmount, buyTotal, 1)" class="button"><img v-if="buyLoader" class="button__loader" src="../assets/loader.svg" alt=""><span v-else class="button__text">PLACE BUY ORDER</span></button></p>
 					</form>
 				</div>
 			</v-tab>
@@ -29,19 +29,19 @@
 					<form class="forms__box form__sell">
 						<div class="form__buy__amount">
 							<p class="input__title">AMOUNT</p>
-							<p class="input__contaner --amount"><input v-model="sellAmount" placeholder="amount_" type="number" step="0.001"><span class="symbol-toolkit">{{pair.symbols[0]}}</span></p>
+							<p class="input__contaner --amount"><input v-model="sellAmount" placeholder="amount_" type="number" step="any"><span class="symbol-toolkit">{{pair.symbols[0]}}</span></p>
 						</div>
 						<div class="form__buy__price">
 							<p class="input__title">PRICE</p>
-							<p class="input__contaner --price"><input @click="updatePrice = false" onClick="this.select();" v-model="sellPrice" placeholder="price_" type="number" step="0.001"><span class="symbol-toolkit">{{pair.symbols[1]}}</span></p>
+							<p class="input__contaner --price"><input @click="updatePrice = false" onClick="this.select();" v-model="sellPrice" placeholder="price_" type="number" step="any"><span class="symbol-toolkit">{{pair.symbols[1]}}</span></p>
 						</div>
-						<p class="--greyish">TOTAL = <span class="--white">{{sellTotal.noExponents()}}</span> {{pair.symbols[1].toUpperCase()}}</p>
+						<p class="--greyish">TOTAL = <span class="--white">{{sellTotal}}</span> {{pair.symbols[1].toUpperCase()}}</p>
 						<p class="--greyish">CHOOSE EXPIRES: 
 							<span v-for="item in expires">
 								<input class="radio-btn" type="radio" :id="item.title" :value="item.blockAmount" v-model="picked">
 								<label :class="{active: picked == item.blockAmount}" class="expries" :for="item.title">{{item.title}}</label>
 							</span>
-						<p class="button-container"><button :disabled="sellLoader" @click.prevent="postOrder(token2, token1, sellTotal, sellAmount, 0)" class="button sell"><img v-if="sellLoader" class="button__loader" src="../assets/loader.svg" alt=""><span v-else class="button__text">PLACE SELL ORDER</span></button></p>
+						<p class="button-container"><button @click.prevent="postOrder(token2, token1, sellTotal, sellAmount, 0)" class="button sell"><img v-if="sellLoader" class="button__loader" src="../assets/loader.svg" alt=""><span v-else class="button__text">PLACE SELL ORDER</span></button></p>
 					</form>
 				</div>	
 			</v-tab>
@@ -59,7 +59,7 @@
 								:class="{active: depositToken == item.token}"  
 								class="expries " 
 								:for="item.name">{{item.name}}</label></span>[choose currency]</p>
-								<p class="input__contaner --amount"><input v-model="depositAmount" placeholder="amount_" type="number" step="0.001"><button @click.prevent="deposit" class="btn btn_deposit">SEND</button></p>
+								<p class="input__contaner --amount"><input v-model="depositAmount" placeholder="amount_" type="number" step="any"><button @click.prevent="deposit" class="btn btn_deposit">SEND</button></p>
 						</div>
 					</form>
 					<form class="forms__box form__manage">
@@ -73,7 +73,7 @@
 								:class="{active: withdrawToken == item.token}" 
 								class="expries" 
 								:for="item.token">{{item.name}}</label></span>[choose currency]</p>
-							<p class="input__contaner --amount"><input v-model="withdrawAmount" placeholder="amount_" type="number" step="0.001"><button @click.prevent="withdrawAlert" class="btn btn_deposit">SEND</button></p>
+							<p class="input__contaner --amount"><input v-model="withdrawAmount" placeholder="amount_" type="number" step="any"><button @click.prevent="withdrawAlert" class="btn btn_deposit">SEND</button></p>
 						</div>
 					</form>
 				</div>
@@ -108,6 +108,7 @@
 
 <script>
 	
+	import provider from '../provider.js'
 	import exchange from '../exchange.js'
 	import settings from '../settings.json'
 	import exchangeLocal from '../exchangeLocal.js'
@@ -152,9 +153,6 @@
 			alert,
 		},
 		computed: {
-			isDesibled(){
-				return e
-			},
 			gasPrice(){
 				return this.$parent.gasPrice;
 			},
@@ -212,11 +210,11 @@
 	        },
 			buyTotal(){
 				var res = this.buyAmount * this.buyPrice;
-				return +res.toFixed(6);
+				return +res.toFixed(10);
 			},
 			sellTotal(){
 				var res = this.sellAmount * this.sellPrice; 
-				return +res.toFixed(6);
+				return +res.toFixed(10);
 			},
 		},
 		watch: {
@@ -242,10 +240,8 @@
 				this.buyLoader = false;
 				this.sellLoader = false;
 				error = String(error);
-
-				console.log(error)
 				if (~error.indexOf('error')) {
-					// location.reload();
+					location.reload();
 				}else{
 					this.popup = true;
 					this.errorTitle = `Error ${error}`
@@ -279,10 +275,10 @@
 			from: String,
 		},
 		methods: {
-			// slideDownChat(){
-			// 	var chat = document.querySelector('.aside-right')
-			// 	chat.classList.remove('active')
-			// },
+			slideDownChat(){
+				var chat = document.querySelector('.aside-right')
+				chat.classList.remove('active')
+			},
 			closePopup(){
 				this.popup = false;
 				this.tx = false;
@@ -406,27 +402,42 @@
 			postOrder(tokenGet, tokenGive, amountGet, amountGive, orderType){
 				const vm = this;
 				(async function(){
-					let nonce = Math.floor(Math.random() * 1000000) + 100
-					let expires = null;
-					let hash = null;
+					var nonce = Math.floor(Math.random() * 1000000) + 100
+					var expires = null;
+					var hash = null;
 					await web3.eth.getBlockNumber().then(res => expires = res + parseFloat(vm.picked))
 					if(vm.$parent.walletType){
 						await exchange.getSign(vm.web3, vm.from, settings.exchangeAddress, tokenGet.toLowerCase(), web3.utils.toWei(amountGet.toString()), tokenGive.toLowerCase(), web3.utils.toWei(amountGive.toString()), expires, nonce, function(h){
 							hash = h;
-						}).then(res => vm.sign = res)
+						})
+						.then(res => vm.sign = res)
 					}else{
+						// console.log([vm.web3, settings.exchangeAddress, tokenGet.toLowerCase(), Number(amountGet * 10**18), tokenGive.toLowerCase(), Number(amountGive * 10**18), expires, nonce])
+						
 						hash = exchange.orderHash(vm.web3, settings.exchangeAddress, tokenGet.toLowerCase(), web3.utils.toWei(amountGet.toString()), tokenGive.toLowerCase(), web3.utils.toWei(amountGive.toString()), expires, nonce);
+
+						console.log(hash);
+
 						var signature = vm.web3.eth.accounts.sign(hash, vm.$parent.privateKey);
 						vm.sign = signature.signature;
+
+						console.log(signature);
+
 						vm.web3.eth.accounts.recover
 					}
+
 					if (orderType == 1) {
 						vm.buyLoader = true;
 					}else{
 						vm.sellLoader = true;
 					}
-					let price = orderType == 1 ? parseFloat(amountGet) / parseFloat(amountGive) : parseFloat(amountGive) / parseFloat(amountGet);
+
+					var price = orderType == 1 ? parseFloat(amountGet) / parseFloat(amountGive) : parseFloat(amountGive) / parseFloat(amountGet);
+
 					let date = new Date();
+
+					// console.log(date.getTime());
+
 					vm.$socket.emit('pushOrder',{
 					    "orderType": orderType,
 					    "pair": vm.pair.path,

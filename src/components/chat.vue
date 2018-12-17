@@ -1,9 +1,9 @@
 <template>
 	<div @click="notification = false" class="window chat">
-		<div class="chat__title"><span class="chat__title__text" :class="{active: notification == true}">Chat</span> <span id="arr"><img src="../assets/arr.svg" alt="arr"></span></div>
+		<div class="chat__title"><span class="chat__title__text" :class="{active: notification == true}">Chat</span> <span id="arr" @click="slideUp"><img src="../assets/arr.svg" alt="arr"></span></div>
 		<div class="chat__wrap">
 			<div id="content">
-				<p class="message" v-for="item in content"><span class="message__author" @click="to(item.author)" v-bind:style="{color: item.color}">{{item.author}}</span>{{item.message}}</p>
+				<p class="message" v-for="item in content"><span @click="to(item.author)" v-bind:style="{color: item.color}">{{item.author}}</span>{{item.message}}</p>
 			</div>
 			<div v-if="signBool" class="input btns">
 				<div>
@@ -144,10 +144,10 @@
 				var container = this.$el.querySelector("#content");
 				container.scrollTop = container.scrollHeight;
 			},
-			// slideUp(){
-			// 	var aside = document.querySelector('.aside-right');
-			// 	aside.classList.toggle('active');
-			// },
+			slideUp(){
+				var aside = document.querySelector('.aside-right');
+				aside.classList.toggle('active');
+			},
 			signIn: async function(){
 				const vm = this;
 				await exchange.sign(vm.web3, vm.from, '0x1234').then(res => vm.sign = res)
@@ -295,10 +295,6 @@
 		padding-top: 3px;
 		background: #242323;
 		position: relative;
-	}
-	.message__author:hover{
-		cursor: pointer;
-		text-decoration: underline;
 	}
 	#input{
 		display: block;

@@ -320,6 +320,7 @@
 			setButtonsEvents(vm){
 				vm.stockOptions.rangeSelector.buttons.forEach((el, i) => {
 					el.events = {
+
 						click(event){
 							// vm.stockOptions.series[0].dataGrouping = vm.dataGrouping[i];
 							// vm.stockOptions.series[1].dataGrouping = vm.dataGrouping[i];
@@ -346,12 +347,13 @@
 				vm.setButtonsEvents(vm);
 				vm.setXAxisEvents(vm);
 			}, 200)
+			vm.updateData();
+
 			setInterval(() => {
 				if (vm.rangeCheker) {
 					vm.updateData()
 				}	
 			}, 15000);
-			vm.updateData();
 		}
 	}
 </script>
