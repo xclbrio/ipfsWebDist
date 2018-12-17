@@ -9,12 +9,12 @@ var server = app.listen(port, function(){
 });
 
 // redirect
-// app.all('*', function(req, res, next) {
-// 	if (req.headers["x-forwarded-proto"] === "https"){
-//        return next();
-//     }
-//     res.redirect("https://" + req.headers.host + req.url);
-// })
+app.all('*', function(req, res, next) {
+	if (req.headers["x-forwarded-proto"] === "https"){
+       return next();
+    }
+    res.redirect("https://" + req.headers.host + req.url);
+})
 
 // token auth
 app.all('/', function(req, res) {
