@@ -40,7 +40,7 @@ window.addEventListener('load', async () => {
         window.web3 = new Web3(web3.currentProvider);
     }
     else {
-        window.web3 = new Web3(new Web3.providers.WebsocketProvider("wss://kovan.infura.io/ws"));
+        window.web3 = new Web3(new Web3.providers.WebsocketProvider("wss://infura.io/ws"));
     }
 
 

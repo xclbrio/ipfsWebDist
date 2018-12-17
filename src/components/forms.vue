@@ -242,8 +242,10 @@
 				this.buyLoader = false;
 				this.sellLoader = false;
 				error = String(error);
+
+				console.log(error)
 				if (~error.indexOf('error')) {
-					location.reload();
+					// location.reload();
 				}else{
 					this.popup = true;
 					this.errorTitle = `Error ${error}`

@@ -252,7 +252,7 @@
 		grid-gap: 1px;
 		grid-template-columns: 378px  1fr  378px;
 		grid-template-rows:	46px 6fr 4fr;
-		grid-template-areas: "he he he" "od	ct fo" "od	hi ch";
+		grid-template-areas: "he he he" "od ct fo" "od hi ch";
 		box-sizing: border-box;
 	}
 
