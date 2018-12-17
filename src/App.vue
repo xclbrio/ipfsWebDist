@@ -11,8 +11,13 @@
 
   import 'normalize.css';
   import headerMain from './components/header.vue'
+
+  import provider from './provider.js'
   import exchange from './exchange.js'
   import settings from './settings.json'
+
+  const web3 = provider.connectWeb3();
+
 
 
   export default {
@@ -20,22 +25,18 @@
     data: function () {
       return {
         from: '',
-        contract: '',
+      }
+    },
+    computed: {
+      contract() {
+        return exchange.initContract(web3, settings.exchangeAbi, settings.contractAddress);
       }
     },
     components: {
       headerMain,
     },
-    methods: {
-      
-    },
     created(){
       var vm = this;
-
-      try {
-        this.contract = exchange.initContract(web3, settings.exchangeAbi, settings.contractAddress);
-      } catch(e) {
-      }
 
       setInterval(function () {
         try {
@@ -54,7 +55,7 @@
 
 <style lang="scss">
   @import url('https://fonts.googleapis.com/css?family=Roboto+Mono:400,700');
-  @import '_base.scss';
+    @import '_base.scss';
   body{
     background-color: $black;
     max-width: 100vw;

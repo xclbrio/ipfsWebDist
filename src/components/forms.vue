@@ -108,6 +108,7 @@
 
 <script>
 	
+	import provider from '../provider.js'
 	import exchange from '../exchange.js'
 	import settings from '../settings.json'
 	import exchangeLocal from '../exchangeLocal.js'

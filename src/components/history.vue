@@ -147,7 +147,6 @@
 	}
 	.history{
 		width: 100%;
-		height: 540px;
 		flex: 4 0;
 		display: flex;
 		flex-direction: column;
