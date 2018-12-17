@@ -1,7 +1,6 @@
 {
 	"apiURL": "https://api.xclbr.io/v0",
 	"wsURL": "https://ws.xclbr.io",
-	"mongodbURL": "mongodb://admin:admin1@ds261660.mlab.com:61660/heroku_lsn55dj3",
 	"mongodbLocalURL": "mongodb://localhost:27017/exchange26",
 	"ordersCollection": "orders",
 	"tradeHistoryCollection": "tradeHistory",
