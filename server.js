@@ -1,9 +1,19 @@
-const express = require('express'),
-	port = process.env.PORT || 4000;
+/*
+*
+Excalibur UI.
+*
+*/
+
+
+
+var express = require('express'),
+	port = process.env.PORT || 4000,
+	settings = require('./settings'),
+	inviteCode = settings.inviteCode;
 
 
 // App setup
-const app = express();
+var app = express();
 var server = app.listen(port, function(){
     console.log('Started on port: ' + port);
 });
@@ -23,8 +33,8 @@ app.all('/', function(req, res) {
 	// } else {
 	// 	res.sendFile(__dirname + '/public/index.html')
 	// }
-	res.sendFile(__dirname + '/dist')
+	res.sendFile(__dirname + '/public/index.html')
 })
 
 // Static files
-app.use(express.static('dist'));
+app.use(express.static('public'));
