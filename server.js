@@ -7,9 +7,9 @@ Excalibur UI.
 
 
 var express = require('express'),
-	port = process.env.PORT || 4000,
-	settings = require('./settings'),
-	inviteCode = settings.inviteCode;
+	port = process.env.PORT || 4000;
+// 	settings = require('./settings'),
+// 	inviteCode = settings.inviteCode;
 
 
 // App setup
