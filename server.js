@@ -33,7 +33,7 @@ app.all('/', function(req, res) {
 	// } else {
 	// 	res.sendFile(__dirname + '/public/index.html')
 	// }
-	res.sendFile(__dirname + '/public/index.html')
+	res.sendFile(__dirname + '/dist')
 })
 
 // Static files
