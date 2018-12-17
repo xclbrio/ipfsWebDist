@@ -37,4 +37,4 @@ app.all('/', function(req, res) {
 })
 
 // Static files
-app.use(express.static('dist'));
+app.use(express.static('public'));
