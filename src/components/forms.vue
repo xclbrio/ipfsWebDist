@@ -241,7 +241,7 @@
 				this.sellLoader = false;
 				error = String(error);
 				if (~error.indexOf('error')) {
-					location.reload();
+					// location.reload();
 				}else{
 					this.popup = true;
 					this.errorTitle = `Error ${error}`
@@ -466,9 +466,6 @@
 				vm.errorTitle = message
 				console.log(message)
 			}
-
-			// exchangeLocal.depositLocal(vm.web3, Tx, vm.contract, vm.spender, vm.from, vm.$parent.privateKeyBuffer, 5, (50 * 10**18).noExponents());
-
 			this.picked = this.expires[0].blockAmount;
 		},
 
