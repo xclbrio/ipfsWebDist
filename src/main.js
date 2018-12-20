@@ -13,8 +13,10 @@ import stockInit from 'highcharts/modules/stock'
 
 import Web3 from 'web3'
 
-
-Vue.use(VueSocketio, settings.wsURL);
+Vue.use(new VueSocketio({
+    debug: true,
+    connection: settings.wsURL,
+}))
 Vue.use(VueResource)
 Vue.use(VueTabs)
 Vue.use(VueRouter)
