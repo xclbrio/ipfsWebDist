@@ -33,6 +33,7 @@ class ExcaliburIPSFTestSuite(unittest.TestCase):
         # self.driver.find_element_by_id('ConnectionButton').click()
         
         self.driver.get("https://translate.google.ru/")
+        time.sleep(20)
         self.driver.find_element_by_id("source").click()
         self.driver.find_element_by_id("source").clear()
         self.driver.find_element_by_id("source").send_keys("csdfdsffsd")
