@@ -35,8 +35,8 @@ class ExcaliburIPSFTestSuite(unittest.TestCase):
         self.driver.get("https://translate.google.ru/")
         time.sleep(20)
         self.driver.find_element_by_id("source").click()
-        self.driver.find_element_by_id("source").clear()
         self.driver.find_element_by_id("source").send_keys("csdfdsffsd")
+        time.sleep(5)
         self.assertEqual("csdfdsffsd", driver.find_element_by_xpath(u"(.//*[normalize-space(text()) and normalize-space(.)='Подробнее…'])[1]/following::span[2]").text)
         exit()
         # enable MetaMask test account
