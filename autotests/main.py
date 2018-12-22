@@ -12,7 +12,7 @@ class ExcaliburIPSFTestSuite(unittest.TestCase):
 
         # launch browser with metamask and touchvpn
         options = webdriver.ChromeOptions()
-        options.binary_location = '/usr/local/bin/chromedriver'
+        # options.binary_location = '/usr/local/bin/chromedriver'
         options.add_extension('metamask.crx')
         options.add_argument("--headless")
         options.add_argument("--disable-gpu")
@@ -20,8 +20,10 @@ class ExcaliburIPSFTestSuite(unittest.TestCase):
         # options.add_extension('touchvpn.crx')
         if self.debug:
             options.add_extension('chroPath.crx')
-
+           
+        
         self.driver = webdriver.Chrome(options=options)
+        print("!!")
         self.driver.implicitly_wait(self.IMPLICITLY_WAIT)
         self.verificationErrors = []
         self.accept_next_alert = True
