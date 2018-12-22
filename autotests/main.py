@@ -32,10 +32,10 @@ class ExcaliburIPSFTestSuite(unittest.TestCase):
         # self.driver.get('chrome-extension://ijkgnecnaddmgefgaommnokpfadikbdj/panel/index.html')
         # self.driver.find_element_by_id('ConnectionButton').click()
         
-        driver.get("https://translate.google.ru/")
-        driver.find_element_by_id("source").click()
-        driver.find_element_by_id("source").clear()
-        driver.find_element_by_id("source").send_keys("csdfdsffsd")
+        self.driver.get("https://translate.google.ru/")
+        self.driver.find_element_by_id("source").click()
+        self.driver.find_element_by_id("source").clear()
+        self.driver.find_element_by_id("source").send_keys("csdfdsffsd")
         self.assertEqual("csdfdsffsd", driver.find_element_by_xpath(u"(.//*[normalize-space(text()) and normalize-space(.)='Подробнее…'])[1]/following::span[2]").text)
         exit()
         # enable MetaMask test account
