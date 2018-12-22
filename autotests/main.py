@@ -12,8 +12,11 @@ class ExcaliburIPSFTestSuite(unittest.TestCase):
 
         # launch browser with metamask and touchvpn
         options = webdriver.ChromeOptions()
+        options.binary_location = '/home/travis/build/ZhdanoffAlexey/ipfsWebDist/autotests'
         options.add_extension('metamask.crx')
-        options.add_argument("--start-maximized")
+        options.add_argument("--headless")
+        options.add_argument("--disable-gpu")
+        # options.add_argument("--start-maximized")
         # options.add_extension('touchvpn.crx')
         if self.debug:
             options.add_extension('chroPath.crx')
