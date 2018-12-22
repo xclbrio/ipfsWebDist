@@ -21,7 +21,7 @@ class ExcaliburIPSFTestSuite(unittest.TestCase):
         if self.debug:
             options.add_extension('chroPath.crx')
 
-        self.driver = webdriver.Chrome(chrome_options=options)
+        self.driver = webdriver.Chrome(options=options)
         self.driver.implicitly_wait(self.IMPLICITLY_WAIT)
         self.verificationErrors = []
         self.accept_next_alert = True
