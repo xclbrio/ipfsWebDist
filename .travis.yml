@@ -9,7 +9,7 @@ addons: # get google-chrome-stable
   chrome: stable
 install: # Install ChromeDriver (64bits)
   - npm install
-  - npm run serve
+#  - npm run serve
   - pip isntall selenium
 
   - wget -N http://chromedriver.storage.googleapis.com/2.30/chromedriver_linux64.zip -P ~/
