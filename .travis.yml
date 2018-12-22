@@ -26,3 +26,4 @@ install: # Install ChromeDriver (64bits)
 script:
 - whereis google-chrome-stable
 - whereis chromedriver
+- cd autotests & python main.py
