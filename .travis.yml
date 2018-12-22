@@ -2,6 +2,8 @@ language: node_js
 sudo: false
 node_js:
   - 10
+  
+language: python
 python:
   - 3.6 
   
@@ -10,7 +12,7 @@ addons: # get google-chrome-stable
 install: # Install ChromeDriver (64bits)
   - npm install
 #  - npm run serve
-  - pip install --upgrade pip
+#  - pip install --upgrade pip
   - pip install selenium
   
   - wget -N http://chromedriver.storage.googleapis.com/2.30/chromedriver_linux64.zip -P ~/
