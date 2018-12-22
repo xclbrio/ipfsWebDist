@@ -16,9 +16,10 @@ install: # Install ChromeDriver (64bits)
   - pip install selenium
   
   - cd autotests
-  - wget -N http://chromedriver.storage.googleapis.com/2.30/chromedriver_linux64.zip -P ~/
+  - wget http://chromedriver.storage.googleapis.com/2.30/chromedriver_linux64.zip
   - unzip ~/chromedriver_linux64.zip -d ~/
   - rm ~/chromedriver_linux64.zip
+  - sudo mv -f ~/chromedriver /usr/local/share/
 #  - mv chromedriver_linux64/chromedriver.exe ../
   - ls
 #  - sudo chmod +x /usr/local/share/chromedriver
