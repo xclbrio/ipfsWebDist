@@ -22,6 +22,7 @@ install: # Install ChromeDriver (64bits)
 #  - sudo mv -f ~/chromedriver /usr/local/share/
 #  - mv chromedriver_linux64/chromedriver.exe ../
   - ls
+  - pwd
 #  - sudo chmod +x /usr/local/share/chromedriver
 #  - sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
 
