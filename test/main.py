@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 from selenium import webdriver
 import unittest, time
 import random
@@ -132,7 +133,7 @@ class ExcaliburIPSFTestSuite(unittest.TestCase):
         while len(driver.window_handles) < 2:
             time.sleep(1)
         driver.switch_to.window(driver.window_handles[1])
-        time.sleep(1)
+        time.sleep(2)
         driver.find_elements_by_tag_name('INPUT')[2].click()
         driver.switch_to.window(driver.window_handles[0])
 
@@ -172,7 +173,7 @@ class ExcaliburIPSFTestSuite(unittest.TestCase):
         while len(driver.window_handles) < 2:
             time.sleep(1)
         driver.switch_to.window(driver.window_handles[1])
-        time.sleep(1)
+        time.sleep(2)
         driver.find_elements_by_tag_name('INPUT')[2].click()
         driver.switch_to.window(driver.window_handles[0])
 
@@ -321,7 +322,7 @@ class ExcaliburIPSFTestSuite(unittest.TestCase):
         while len(driver.window_handles) < 2:
             time.sleep(1)
         driver.switch_to.window(driver.window_handles[1])
-        time.sleep(1)
+        time.sleep(2)
         driver.find_elements_by_tag_name('INPUT')[2].click()
         driver.switch_to.window(driver.window_handles[0])
 
@@ -366,7 +367,7 @@ class ExcaliburIPSFTestSuite(unittest.TestCase):
         while len(driver.window_handles) < 2:
             time.sleep(1)
         driver.switch_to.window(driver.window_handles[1])
-        time.sleep(1)
+        time.sleep(2)
         driver.find_elements_by_tag_name('INPUT')[2].click()
         driver.switch_to.window(driver.window_handles[0])
 
@@ -391,4 +392,5 @@ class ExcaliburIPSFTestSuite(unittest.TestCase):
 
 
 if __name__ == "__main__":
+    print('Running functional tests:')
     unittest.main()
