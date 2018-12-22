@@ -2,7 +2,8 @@ language: node_js
 sudo: false
 node_js:
   - 10
-  
+python:
+  - 3.6 
   
 addons: # get google-chrome-stable
   chrome: stable
@@ -18,4 +19,5 @@ install: # Install ChromeDriver (64bits)
 
   
 script:
-  
+- whereis google-chrome-stable
+- whereis chromedriver
