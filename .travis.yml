@@ -7,12 +7,11 @@ language: python
 python:
   - 3.6 
   
-addons: # get google-chrome-stable
+addons:
   chrome: stable
-install: # Install ChromeDriver (64bits)
-  - npm install
-#  - npm run serve
-#  - pip install --upgrade pip
+install:
+  #- npm install
+
   - pip install selenium
   - apt-get install xvfb
   - cd autotests
@@ -22,12 +21,10 @@ install: # Install ChromeDriver (64bits)
   - sudo mv -f chromedriver /usr/local/share/
   - sudo chmod +x /usr/local/share/chromedriver
   - sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
-#  - sudo mv -f ~/chromedriver /usr/local/share/
-#  - mv chromedriver_linux64/chromedriver.exe ../
+
   - ls
   - pwd
-#  - sudo chmod +x /usr/local/share/chromedriver
-#  - sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
+
   
 script:
 - whereis google-chrome-stable
