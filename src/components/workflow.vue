@@ -118,6 +118,8 @@
 			connect(){
 				var vm = this;
 				console.log('socket connected');
+				
+				vm.$socket.emit('joinRoom', vm.room);
 				vm.preLoader = false
 
 			},
@@ -157,7 +159,7 @@
 		created(){
 			var vm = this;
 
-			vm.$socket.emit('joinRoom', vm.room);
+			
 
 			vm.accounts = vm.getAccounts();
 
