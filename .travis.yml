@@ -1,3 +1,10 @@
+notifications:
+  email:
+    recipients:
+      - zhdanoff.alexey@gmail.com
+    on_success: never
+    on_failure: always
+
 language: node_js
 sudo: false
 node_js:
