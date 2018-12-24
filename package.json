@@ -34,7 +34,7 @@
     "vue-nav-tabs": "^0.5.7",
     "vue-resource": "^1.5.1",
     "vue-router": "^3.0.1",
-    "vue-socket.io": "^3.0.4",
+    "vue-socket.io": "^3.0.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.0.0-beta.15",
@@ -49,7 +49,7 @@
     "node-sass": "^4.10.0",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.21.0",
-    "vue-template-compiler": "^2.5.16",
+    "vue-template-compiler": "^2.5.16"
   },
 
   "eslintConfig": {
