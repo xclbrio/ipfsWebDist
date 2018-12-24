@@ -1,8 +1,35 @@
+notifications:
+  email:
+    recipients:
+      - zhdanoff.alexey@gmail.com
+    on_success: never
+    on_failure: always
+
 language: node_js
 sudo: false
 node_js:
   - 10
+  
+language: python
+python:
+  - 3.6 
+  
+addons:
+  chrome: stable
 install:
   - npm install
+  - pip install selenium
+  
+  - cd test
+  - wget http://chromedriver.storage.googleapis.com/2.45/chromedriver_linux64.zip
+  - unzip chromedriver_linux64.zip
+  - rm chromedriver_linux64.zip
+  - sudo mv -f chromedriver /usr/local/share/
+  - sudo chmod +x /usr/local/share/chromedriver
+  - sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
+  
 script:
-  - npm run test:unit
+- whereis google-chrome-stable
+- whereis chromedriver
+- npm run serve &
+- DISPLAY=:99 xvfb-run -s "-screen 0, 1920x1080x24" python main.py
