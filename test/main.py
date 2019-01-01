@@ -117,7 +117,7 @@ class ExcaliburIPSFTestSuite(unittest.TestCase):
         self.assertFalse(driver.find_element_by_xpath(
             "(.//*[normalize-space(text()) and normalize-space(.)='SEND'])[2]/following::div[1]").is_displayed())
 
-    def test_21_order_execution(self):
+    def test_91_order_execution(self):
         driver = self.driver
 
         # go to ORDER BOOK
@@ -157,7 +157,7 @@ class ExcaliburIPSFTestSuite(unittest.TestCase):
         else:
             self.fail("time out")
 
-    def test_22_order_cancel(self):
+    def test_92_order_cancel(self):
         driver = self.driver
 
         # go to PERSONAL ORDER BOOK
