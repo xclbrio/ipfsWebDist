@@ -92,3 +92,4 @@ fabric.properties
 
 # Chrome Driver
 *.exe
+*.map
