@@ -50,7 +50,7 @@ if (window.innerWidth < 800) {
   var hash = location.hash;
 
   let curLocation = location.href;
-  let mobLocation = curLocation.slice(0, curLocation.indexOf('e')) + "m." + curLocation.slice(curLocation.indexOf('x'));
+  let mobLocation = curLocation.slice(0, curLocation.indexOf('e')) + "m." + curLocation.slice(curLocation.indexOf('e'));
 
   location.replace(`${mobLocation}`)
 }
