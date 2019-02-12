@@ -30,8 +30,8 @@
 				<li class="header__navi-item --red"><a target="_blank" href="https://github.com/xclbrio/wiki/issues">report</a></li>
 				<li class="header__navi-item"><a target="_blank" href="https://github.com/xclbrio">github</a></li>
 				<li class="header__navi-item"><a target="_blank" :href="etherscan">etherscan</a></li>
-				<li class="header__navi-item"><a target="_blank" @click.prevent href="">twitter</a></li>
-				<li class="header__navi-item"><a target="_blank" @click.prevent href="">telegram</a></li>
+				<li class="header__navi-item"><a target="_blank" href="https://twitter.com/xclbrio">twitter</a></li>
+				<li class="header__navi-item"><a target="_blank" href="https://t.me/xclbrio">telegram</a></li>
 			</ul>
 
 			<!-- <div class="header__langswitcher">
