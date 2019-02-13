@@ -5,7 +5,7 @@
 [![](https://img.shields.io/badge/powered%20by-IPFS-%234A9EA1.svg?style=popout-square)](https://ipfs.io/)
 [![GitHub](https://img.shields.io/github/license/xclbrio/ipfsWebDist.svg?style=flat-square)](https://github.com/xclbrio/ipfsWebDist/blob/master/LICENSE.md)
 [![Travis (.com)](https://img.shields.io/travis/com/xclbrio/ipfsWebDist.svg?style=flat-square)](https://travis-ci.com/xclbrio/ipfsWebDist)
-[![GitHub release](https://img.shields.io/github/release/xclbrio/ipfsWebDist.svg?style=flat-square)](https://github.com/xclbrio/ipfsWebDist/releases)
+[![GitHub release](https://img.shields.io/travis/com/ZhdanoffAlexey/contracts.svg?style=flat-square)](https://github.com/xclbrio/ipfsWebDist/releases)
 [![Gitter](https://img.shields.io/gitter/room/:user/:repo.svg?style=flat-square)](https://gitter.im/xclbrio/Lobby)
 
 Excalibur IPFS Dist of Web Version
