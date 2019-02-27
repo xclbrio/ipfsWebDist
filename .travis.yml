@@ -3,7 +3,7 @@ notifications:
     recipients:
       - zhdanoff.alexey@gmail.com
     on_success: never
-    on_failure: always
+    on_failure: never
 
 language: node_js
 sudo: false
