@@ -1,6 +1,6 @@
 {
-	"apiURL": "https://excaliburapi.herokuapp.com/",
-	"wsURL": "https://excalibursocket.herokuapp.com/",
+	"apiURL": "https://excaliburapi.herokuapp.com/v0",
+	"wsURL": "https://excalibursocket.herokuapp.com",
 	"mongodbLocalURL": "mongodb://localhost:27017/exchange26",
 	"ordersCollection": "orders",
 	"tradeHistoryCollection": "tradeHistory",

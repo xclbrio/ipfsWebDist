@@ -124,7 +124,7 @@
 								enabled: true,
 								format: '{value:.6f}'
 							}
-							
+
 						},
 						height: '70%',
 						resize: {
@@ -143,7 +143,7 @@
 								enabled: true,
 								format: '{value:.6f}'
 							}
-							
+
 						},
 						top: '70%',
 						height: '30%',
@@ -211,7 +211,7 @@
 			chart() {
 				return this.$refs.chart
 			},
-			
+
 		},
 		props: {
 			pair: Object,
@@ -276,7 +276,7 @@
 			},
 			updateData(callback){
 				var vm = this
-				
+
 				vm.$http.get(`${settings.apiURL}/priceChart?tget=${vm.tokenGetAddress}&tgive=${vm.tokenGiveAddress}&page=0`).then(res => {
 					var data = res.data._items
 
@@ -352,7 +352,7 @@
 			setInterval(() => {
 				if (vm.rangeCheker) {
 					vm.updateData()
-				}	
+				}
 			}, 15000);
 		}
 	}
