@@ -8,7 +8,7 @@
 [![GitHub release](https://img.shields.io/github/release/xclbrio/ipfsWebDist.svg?style=flat-square)](https://github.com/xclbrio/ipfsWebDist/releases)
 [![Gitter](https://img.shields.io/gitter/room/:user/:repo.svg?style=flat-square)](https://gitter.im/xclbrio/Lobby)
 
-Excalibur IPFS Dist of Web Version
+Excalibur IPFS Dist
 <br/><br/>
 
 [![](https://raw.githubusercontent.com/xclbrio/styleGuide/master/exploreIPFS.svg?sanitize=true)](https://ipfs.xclbr.io)
