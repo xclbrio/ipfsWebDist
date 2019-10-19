@@ -11,9 +11,9 @@
 Excalibur IPFS Dist
 <br/><br/>
 
-[![](https://raw.githubusercontent.com/xclbrio/styleGuide/master/exploreIPFS.svg?sanitize=true)](https://ipfs.xclbr.io)
+[![](https://raw.githubusercontent.com/xclbrio/styleGuide/master/exploreIPFS.svg?sanitize=true)](https://exchange.xclbr.io)
 [![](https://raw.githubusercontent.com/xclbrio/styleGuide/master/downloadIPFS.svg?sanitize=true)](https://github.com/xclbrio/ipfsWebDist/releases)
-> Official IPNS hash: [ipns/QmTU3XCUz1LiHJjNvfDdEycTSzihURcGRFTrHr5zuhqRBe](https://cloudflare-ipfs.com/ipns/QmTU3XCUz1LiHJjNvfDdEycTSzihURcGRFTrHr5zuhqRBe)
+> IPFS hash (pinata.cloud): [ipfs/QmevLo13Nr9uSMqaKuWubMzqoZfo99Xt44zb1K8hGzFXTg](https://gateway.pinata.cloud/ipfs/QmevLo13Nr9uSMqaKuWubMzqoZfo99Xt44zb1K8hGzFXTg/)
 
 <br/>
 <br/>
