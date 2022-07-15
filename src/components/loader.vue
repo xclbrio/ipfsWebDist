@@ -16,15 +16,15 @@
 			}
 		},
 		created(){
-			const vm = this;
+			 
 			let i = 0;
 			setInterval(() => {
 				if (i != 2) {
 					i++
-					vm.dots = vm.dots + '.'
+					this.dots = this.dots + '.'
 				}else{ 
 					i = 0;
-					vm.dots = '.'
+					this.dots = '.'
 				}
 			}, 600)
 		}

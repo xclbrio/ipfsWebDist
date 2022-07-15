@@ -36,11 +36,11 @@
       headerMain,
     },
     created(){
-      var vm = this;
+       
 
       setInterval(function () {
         try {
-          web3.eth.getAccounts().then(res => vm.from = res[0]);
+          web3.eth.getAccounts().then(res => this.from = res[0]);
         } catch(e) {
           
         }
@@ -55,7 +55,7 @@
 
 <style lang="scss">
   @import url('https://fonts.googleapis.com/css?family=Roboto+Mono:400,700');
-    @import '_base.scss';
+  @import '_base.scss';
   body{
     background-color: $black;
     max-width: 100vw;

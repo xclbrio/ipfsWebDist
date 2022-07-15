@@ -167,9 +167,9 @@
 			tokenGetAddress(){ return this.pair.tokens[0]},
 			tokenGiveAddress(){ return this.pair.tokens[1]},
 			personalOrders(){
-				const vm = this;
-				if (vm.from !== null && vm.from !== "undefined") {
-					vm.ordersList.forEach( function(element) {
+				 
+				if (this.from !== null && this.from !== "undefined") {
+					this.ordersList.forEach( function(element) {
 						if (element.orderType == 1 || element.orderType == 'buy') {
 							element.orderType = 'buy'
 							element.price = element.amountGive / element.amountGet
@@ -180,7 +180,7 @@
 							element.price = element.amountGet / element.amountGive
 						}
 					});
-					return vm.ordersList.filter(element => element.maker.toLowerCase() == vm.from.toLowerCase())
+					return this.ordersList.filter(element => element.maker.toLowerCase() == this.from.toLowerCase())
 				}
 			},
 			listSell(){
@@ -190,15 +190,15 @@
 				return this.ordersList.filter(element => element.orderType == 1 || element.orderType == 'buy').sort((a, b) => b.price - a.price);
 			},
 			sell(){
-				const vm = this;
-				return this.listSell[vm.listSell.length - 1].price;
+				 
+				return this.listSell[this.listSell.length - 1].price;
 			},
 			buy(){
 				return this.listBuy[0].price;
 			},
 			spread(){
-				const vm = this;
-				return vm.listBuy.length !== 0 && vm.listSell.length !== 0 ? +(Math.max(vm.buy, vm.sell) - Math.min(vm.buy, vm.sell)).toFixed(10) : '-';
+				 
+				return this.listBuy.length !== 0 && this.listSell.length !== 0 ? +(Math.max(this.buy, this.sell) - Math.min(this.buy, this.sell)).toFixed(10) : '-';
 			},
 			txlink(){
 				return `${settings.network.etherscan}tx/${this.txhash}`
@@ -227,8 +227,8 @@
 				this.ordersList.push(pushOrder)
 			},
 			ordersCollection(ordersCollection) {
-				const vm = this;
-				vm.ordersList = ordersCollection._items;
+				 
+				this.ordersList = ordersCollection._items;
 				console.log('ordersCollection:', ordersCollection._items);
 			},
 
@@ -274,30 +274,30 @@
 					expiresDate.getUTCMinutes() < 10 ? '0' + expiresDate.getUTCMinutes() : expiresDate.getUTCMinutes()}`;
 			},
 			doOrder(i, type){
-				var vm = this;
+				 
 				if (type == 'sell') {
-					var data = vm.listBuy[i]
+					var data = this.listBuy[i]
 
-					vm.orderData = {
+					this.orderData = {
 						orderFills: web3.utils.fromWei(data.orderFills.toString()),
 						price:  data.price,
 
 					}
-					vm.order.orderType = 'sell'
+					this.order.orderType = 'sell'
 					
 				}else{
-					var data = vm.listSell[i]
-					vm.orderData = {
+					var data = this.listSell[i]
+					this.orderData = {
 						orderFills: Number(web3.utils.fromWei(((data.orderFills * data.amountGive) / data.amountGet).toString())).toFixed(6),
 						price: (data.amountGet / data.amountGive).toFixed(6),
 					}
 
-					vm.order.amount = vm.orderData.orderFills;
-					vm.order.orderType = 'buy'
+					this.order.amount = this.orderData.orderFills;
+					this.order.orderType = 'buy'
 				}
 
-				var rsv = exchange.rsv(vm.web3, data.sig);
-				vm.order = {
+				var rsv = exchange.rsv(this.web3, data.sig);
+				this.order = {
 					orderFills: data.orderFills,
 					tokenGet: data.tokenGet,
 					amountGet: data.amountGet,
@@ -309,42 +309,42 @@
 					v: rsv.v,
 					r: rsv.r,
 					s: rsv.s,
-					amount: vm.orderData.orderFills,
+					amount: this.orderData.orderFills,
 					orderType: type,
 					price: data.price,
-					expiresDate: vm.formatDate(data.expiresDateTime),
+					expiresDate: this.formatDate(data.expiresDateTime),
 				}
-				vm.buyFrom = window.innerWidth > 1024;
+				this.buyFrom = window.innerWidth > 1024;
 			},
 			trade: async function(e){
 				e.preventDefault()
-				const vm = this;
-				if(vm.order.orderType == 'buy') {
-					vm.orderData.amount = web3.utils.toWei((vm.order.amount * vm.order.price).toFixed(10).toString());
+				 
+				if(this.order.orderType == 'buy') {
+					this.orderData.amount = web3.utils.toWei((this.order.amount * this.order.price).toFixed(10).toString());
 				}else{
-					vm.orderData.amount = web3.utils.toWei(Number(vm.order.amount).toFixed(10).toString());
+					this.orderData.amount = web3.utils.toWei(Number(this.order.amount).toFixed(10).toString());
 				}
-				// console.log([vm.from.toLowerCase(), vm.order.tokenGet, vm.order.amountGet, vm.order.tokenGive, vm.order.amountGive, vm.order.expires, vm.order.nonce, vm.order.user, vm.order.v, vm.order.r, vm.order.s, vm.order.amount * 10**18, vm.pair.path])
-				console.log([vm.order.tokenGet, vm.order.amountGet, vm.order.tokenGive, vm.order.amountGive, vm.order.expires, vm.order.nonce, vm.order.user, vm.order.v, vm.order.r, vm.order.s, vm.orderData.amount, vm.pair.path])
+				// console.log([this.from.toLowerCase(), this.order.tokenGet, this.order.amountGet, this.order.tokenGive, this.order.amountGive, this.order.expires, this.order.nonce, this.order.user, this.order.v, this.order.r, this.order.s, this.order.amount * 10**18, this.pair.path])
+				console.log([this.order.tokenGet, this.order.amountGet, this.order.tokenGive, this.order.amountGive, this.order.expires, this.order.nonce, this.order.user, this.order.v, this.order.r, this.order.s, this.orderData.amount, this.pair.path])
 
-				console.log(typeof vm.orderData.amount)
-				if (vm.$parent.walletType) {
-					await exchange.trade(vm.contract, vm.from, vm.order.tokenGet, web3.utils.numberToHex(vm.order.amountGet), vm.order.tokenGive, web3.utils.numberToHex(vm.order.amountGive), vm.order.expires, vm.order.nonce, vm.order.user, vm.order.v, vm.order.r, vm.order.s, web3.utils.numberToHex(vm.orderData.amount), vm.pair.path,
+				console.log(typeof this.orderData.amount)
+				if (this.$parent.walletType) {
+					await exchange.trade(this.contract, this.from, this.order.tokenGet, web3.utils.numberToHex(this.order.amountGet), this.order.tokenGive, web3.utils.numberToHex(this.order.amountGive), this.order.expires, this.order.nonce, this.order.user, this.order.v, this.order.r, this.order.s, web3.utils.numberToHex(this.orderData.amount), this.pair.path,
 						function(h) {
-							vm.txhash = String(h);
-							if (vm.txhash !== "undefined") {
-								vm.popup = true
+							this.txhash = String(h);
+							if (this.txhash !== "undefined") {
+								this.popup = true
 							}
 					}).then(res => {
-						vm.buyFrom = false;
+						this.buyFrom = false;
 					}, err => console.log(err))
 				}else{
-					EthUtil.toBuffer(vm.order.amountGet)
-					await exchangeLocal.trade(vm.contract, Tx, settings.exchangeAddress, vm.from, vm.$parent.privateKeyBuffer, 5, 0, vm.order.tokenGet, web3.utils.numberToHex(vm.order.amountGet), vm.order.tokenGive, web3.utils.numberToHex(vm.order.amountGive), vm.order.expires, vm.order.nonce, vm.order.user, vm.order.v, vm.order.r, vm.order.s, web3.utils.numberToHex(vm.orderData.amount), vm.pair.path, function(h){
+					EthUtil.toBuffer(this.order.amountGet)
+					await exchangeLocal.trade(this.contract, Tx, settings.exchangeAddress, this.from, this.$parent.privateKeyBuffer, 5, 0, this.order.tokenGet, web3.utils.numberToHex(this.order.amountGet), this.order.tokenGive, web3.utils.numberToHex(this.order.amountGive), this.order.expires, this.order.nonce, this.order.user, this.order.v, this.order.r, this.order.s, web3.utils.numberToHex(this.orderData.amount), this.pair.path, function(h){
 
-						vm.txhash = String(h);
-						if (vm.txhash !== "undefined") {
-							vm.popup = true
+						this.txhash = String(h);
+						if (this.txhash !== "undefined") {
+							this.popup = true
 						}
 						
 					})
@@ -352,7 +352,7 @@
 				}
 
 				setTimeout(function(){
-					vm.buyFrom = false;
+					this.buyFrom = false;
 				}, 3000)
 			},
 			closeForm(){
@@ -361,63 +361,63 @@
 			},
 			
 			getFiat(){
-				const vm = this;
-				this.$http.get(`https://api.coinmarketcap.com/v1/ticker/${vm.pair.fullName[0]}/`).then(res => {
+				 
+				this.$http.get(`https://api.coinmarketcap.com/v1/ticker/${this.pair.fullName[0]}/`).then(res => {
 					console.log(res)
-					vm.fiat = res.body[0].price_usd
+					this.fiat = res.body[0].price_usd
 				})
 			},
 			toCancelOrder(i){
-				const vm = this;
+				 
 
-				if (vm.personalOrders[i].orderType == 'buy') {
-					vm.personalOrders[i].orderBody = {
-						amount: web3.utils.fromWei(String(vm.personalOrders[i].orderFills)),
-						price: vm.personalOrders[i].price.toFixed(6),
+				if (this.personalOrders[i].orderType == 'buy') {
+					this.personalOrders[i].orderBody = {
+						amount: web3.utils.fromWei(String(this.personalOrders[i].orderFills)),
+						price: this.personalOrders[i].price.toFixed(6),
 					}
 				}else{
-					vm.personalOrders[i].orderBody = {
-						amount: web3.utils.fromWei(String((vm.personalOrders[i].orderFills * vm.personalOrders[i].amountGive) / vm.personalOrders[i].amountGet)),
-						price: (vm.personalOrders[i].amountGet / vm.personalOrders[i].amountGive).toFixed(6),
+					this.personalOrders[i].orderBody = {
+						amount: web3.utils.fromWei(String((this.personalOrders[i].orderFills * this.personalOrders[i].amountGive) / this.personalOrders[i].amountGet)),
+						price: (this.personalOrders[i].amountGet / this.personalOrders[i].amountGive).toFixed(6),
 					}
 				}
-				vm.personalOrders[i].orderBody
-				vm.cancelOrderData = vm.personalOrders[i];
-				vm.cancelOrderData.expiresDate = vm.formatDate(vm.cancelOrderData.expiresDateTime);
+				this.personalOrders[i].orderBody
+				this.cancelOrderData = this.personalOrders[i];
+				this.cancelOrderData.expiresDate = this.formatDate(this.cancelOrderData.expiresDateTime);
 
-				vm.cancelForm = true;
+				this.cancelForm = true;
 
 			},
 			cancelOrder: async function(i){
-				const vm = this;
+				 
 				let data = this.cancelOrderData;
-				let rsv = exchange.rsv(vm.web3, data.sig);
+				let rsv = exchange.rsv(this.web3, data.sig);
 
-				console.log([vm.contract, vm.from, data.tokenGet, data.amountGet, data.tokenGive, data.amountGive, data.expires, data.nonce, rsv.v, rsv.r, rsv.s, vm.pair.path]);
-				if (vm.$parent.walletType) {
+				console.log([this.contract, this.from, data.tokenGet, data.amountGet, data.tokenGive, data.amountGive, data.expires, data.nonce, rsv.v, rsv.r, rsv.s, this.pair.path]);
+				if (this.$parent.walletType) {
 
-					await exchange.cancelOrder(vm.contract, vm.from, data.tokenGet, web3.utils.numberToHex(data.amountGet), data.tokenGive, web3.utils.numberToHex(data.amountGive), data.expires, data.nonce, rsv.v, rsv.r, rsv.s, vm.pair.path, function(h){
-						vm.txhash = String(h);
-						if (vm.txhash !== "undefined") {
-							vm.popup = true
+					await exchange.cancelOrder(this.contract, this.from, data.tokenGet, web3.utils.numberToHex(data.amountGet), data.tokenGive, web3.utils.numberToHex(data.amountGive), data.expires, data.nonce, rsv.v, rsv.r, rsv.s, this.pair.path, function(h){
+						this.txhash = String(h);
+						if (this.txhash !== "undefined") {
+							this.popup = true
 						}
 					})
 				}else{
-					await exchangeLocal.cancel(vm.contract, Tx, settings.exchangeAddress, vm.from, vm.$parent.privateKeyBuffer, 5, 0, data.tokenGet, web3.utils.numberToHex(data.amountGet), data.tokenGive, web3.utils.numberToHex(data.amountGive), data.expires, data.nonce, rsv.v, rsv.r, rsv.s, vm.pair.path, function(h){
-							vm.txhash = String(h);
-							if (vm.txhash !== "undefined") {
-								vm.popup = true
+					await exchangeLocal.cancel(this.contract, Tx, settings.exchangeAddress, this.from, this.$parent.privateKeyBuffer, 5, 0, data.tokenGet, web3.utils.numberToHex(data.amountGet), data.tokenGive, web3.utils.numberToHex(data.amountGive), data.expires, data.nonce, rsv.v, rsv.r, rsv.s, this.pair.path, function(h){
+							this.txhash = String(h);
+							if (this.txhash !== "undefined") {
+								this.popup = true
 							}
 						})
 				}
 				setTimeout(function(){
-					vm.cancelForm = false;
+					this.cancelForm = false;
 				}, 3000)
 			},
 	    },
 	    created() {
-	    	var vm = this;
-			vm.getFiat();
+	    	 
+			this.getFiat();
 	    },
 	}
 </script>

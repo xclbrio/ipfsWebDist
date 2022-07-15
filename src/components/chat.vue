@@ -74,22 +74,22 @@
 				this.signBool = false;
 			},
 			pushMessage(pushMessage){
-				var vm = this;
+				 
 				// console.log('pushMessage:', pushMessage);
 				this.addMessage(pushMessage.username, pushMessage.msg, pushMessage.color, new Date(pushMessage.time))
-				if (~pushMessage.msg.indexOf(`@${vm.myName}`)) {
-					vm.playSound();
+				if (~pushMessage.msg.indexOf(`@${this.myName}`)) {
+					this.playSound();
 				}
 				this.notification = pushMessage.username !== this.myName
 			},
 			chatHistory(chatHistory){
 				// console.log('chatHistory:', chatHistory);
-				const vm = this;
+				 
 				chatHistory._items.forEach(element => {
-					vm.addMessage(element.username, element.msg, element.color, new Date(element.time))
+					this.addMessage(element.username, element.msg, element.color, new Date(element.time))
 				})
 				if (localStorage.getItem('chatData') !== null) {
-					vm.$socket.emit('signInChat', JSON.parse(localStorage.getItem('chatData')));
+					this.$socket.emit('signInChat', JSON.parse(localStorage.getItem('chatData')));
 				}
 			},
 		},
@@ -111,22 +111,22 @@
 				});
 			},
 			sendMessage(){
-				const vm = this;
-				var msg = vm.message;
+				 
+				var msg = this.message;
 				if (!msg) {
 					return;
 				}
 
-				// vm.connection.send(msg);
+				// this.connection.send(msg);
 				
-				vm.message = '';
+				this.message = '';
 				// disable the input field to make the user wait until server
 				// sends back response
-				vm.disabled = true;
+				this.disabled = true;
 
 				// we know that the first message sent from a user their name
-				if (vm.myName === false) {
-					vm.signUp(msg);
+				if (this.myName === false) {
+					this.signUp(msg);
 				}else{
 					if (msg == '/logout') {
 						localStorage.removeItem('chatData');
@@ -136,7 +136,7 @@
 						this.signBool = true;
 
 					}else{
-						vm.$socket.emit('pushMessage', msg)
+						this.$socket.emit('pushMessage', msg)
 					}
 				}
 			},
@@ -149,38 +149,38 @@
 				aside.classList.toggle('active');
 			},
 			signIn: async function(){
-				const vm = this;
-				await exchange.sign(vm.web3, vm.from, '0x1234').then(res => vm.sign = res)
+				 
+				await exchange.sign(this.web3, this.from, '0x1234').then(res => this.sign = res)
 				let chatSignInData = {
-					wallet: vm.from,
+					wallet: this.from,
 					msg: '0x1234',
-					sig: vm.sign,
+					sig: this.sign,
 				};
 				await localStorage.setItem('chatData', JSON.stringify(chatSignInData));
 
 				// console.log(chatSignInData)
-				await vm.$socket.emit('signInChat', chatSignInData);
+				await this.$socket.emit('signInChat', chatSignInData);
 			},
 			preSignUp(){
-				const vm = this;
-				if (vm.from !== null && vm.from !== undefined) {
-					vm.signBool = false;
+				 
+				if (this.from !== null && this.from !== undefined) {
+					this.signBool = false;
 				}
 			},
 			signUp: async function(username_){
-				const vm = this;
-				await exchange.sign(vm.web3, vm.from, '0x1234').then(res => vm.sign = res)
+				 
+				await exchange.sign(this.web3, this.from, '0x1234').then(res => this.sign = res)
 				let chatSignUpData = {
-					wallet: vm.from,
+					wallet: this.from,
 					username: username_,
 					msg: '0x1234',
-					sig: vm.sign,
+					sig: this.sign,
 				}
 				await localStorage.setItem('chatData', JSON.stringify(chatSignUpData));
 
 				// console.log(chatSignUpData)
-				await vm.$socket.emit('signUpChat', chatSignUpData);
-				vm.signBool = true
+				await this.$socket.emit('signUpChat', chatSignUpData);
+				this.signBool = true
 			}
 
 		}

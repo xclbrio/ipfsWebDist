@@ -218,13 +218,13 @@
 		},
 		watch: {
 			pair() {
-				const vm = this;
-				vm.chartData = [];
-				vm.stockOptions.rangeSelector.selected = 2;
-				vm.stockOptions.series[0].dataGrouping = vm.dataGrouping[2];
-				vm.stockOptions.series[1].dataGrouping = vm.dataGrouping[2];
-				vm.updateData(function(){
-					setTimeout(vm.updateData, 500)
+				 
+				this.chartData = [];
+				this.stockOptions.rangeSelector.selected = 2;
+				this.stockOptions.series[0].dataGrouping = this.dataGrouping[2];
+				this.stockOptions.series[1].dataGrouping = this.dataGrouping[2];
+				this.updateData(function(){
+					setTimeout(this.updateData, 500)
 				});
 			},
 			ohlc(){
@@ -258,8 +258,8 @@
 		// },
 		methods: {
 			formating(el){
-				const vm = this;
-				if(el.tokenGet == vm.tokenGetAddress){
+				 
+				if(el.tokenGet == this.tokenGetAddress){
 					el.orderType = 'buy'
 					el.price = +(el.amountGive / el.amountGet).toFixed(10);
 					el.amount = el.amountGet
@@ -275,12 +275,12 @@
 				this.stockOptions.xAxis.range = range_;
 			},
 			updateData(callback){
-				var vm = this
+				
 
-				vm.$http.get(`${settings.apiURL}/priceChart?tget=${vm.tokenGetAddress}&tgive=${vm.tokenGiveAddress}&page=0`).then(res => {
+				this.$http.get(`${settings.apiURL}/priceChart?tget=${this.tokenGetAddress}&tgive=${this.tokenGiveAddress}&page=0`).then(res => {
 					var data = res.data._items
 
-						vm.chartData = data;
+						this.chartData = data;
 						this.stockOptions.series[0].data = this.ohlc;
 						this.stockOptions.series[1].data = this.volume;
 						try {
@@ -293,23 +293,23 @@
 				)
 			},
 			setHeight(vm){
-				vm.stockOptions.chart.height = document.querySelector('.chart__container').offsetHeight;
+				this.stockOptions.chart.height = document.querySelector('.chart__container').offsetHeight;
 			},
 			setPoitnsEvents(vm){
-				vm.stockOptions.plotOptions = {
+				this.stockOptions.plotOptions = {
 					series: {
 						point:{
 							events: {
 								mouseOver(event){
-									vm.date = event.target.x
+									this.date = event.target.x
 									setTimeout(function(){
 										var tooltips = document.getElementsByClassName('highcharts-tooltip')[0].innerHTML;
 
-										vm.close = Number(tooltips.split('Close: ')[1].split('</')[0]).toFixed(4);
-										vm.open = Number(tooltips.split('Open: ')[1].split('</')[0]).toFixed(4);
-										vm.high = Number(tooltips.split('High: ')[1].split('</')[0]).toFixed(4);
-										vm.low = Number(tooltips.split('Low: ')[1].split('</')[0]).toFixed(4);
-										vm.volumeLegend = Number(tooltips.split('Volume')[1].split('dx="0">')[1].split('</')[0]).toFixed(4);
+										this.close = Number(tooltips.split('Close: ')[1].split('</')[0]).toFixed(4);
+										this.open = Number(tooltips.split('Open: ')[1].split('</')[0]).toFixed(4);
+										this.high = Number(tooltips.split('High: ')[1].split('</')[0]).toFixed(4);
+										this.low = Number(tooltips.split('Low: ')[1].split('</')[0]).toFixed(4);
+										this.volumeLegend = Number(tooltips.split('Volume')[1].split('dx="0">')[1].split('</')[0]).toFixed(4);
 									},20)
 								}
 							}
@@ -318,22 +318,22 @@
 				};
 			},
 			setButtonsEvents(vm){
-				vm.stockOptions.rangeSelector.buttons.forEach((el, i) => {
+				this.stockOptions.rangeSelector.buttons.forEach((el, i) => {
 					el.events = {
 
 						click(event){
-							// vm.stockOptions.series[0].dataGrouping = vm.dataGrouping[i];
-							// vm.stockOptions.series[1].dataGrouping = vm.dataGrouping[i];
-							// vm.stockOptions.xAxis.range = vm.range[i];
-							vm.stockOptions.rangeSelector.selected = i;
+							// this.stockOptions.series[0].dataGrouping = this.dataGrouping[i];
+							// this.stockOptions.series[1].dataGrouping = this.dataGrouping[i];
+							// this.stockOptions.xAxis.range = this.range[i];
+							this.stockOptions.rangeSelector.selected = i;
 						}
 					}
 				})
 			},
 			setXAxisEvents(vm){
-				vm.stockOptions.xAxis.events = {
+				this.stockOptions.xAxis.events = {
 					afterSetExtremes(e){
-						vm.rangeCheker = e.dataMax == e.max;
+						this.rangeCheker = e.dataMax == e.max;
 					}
 				}
 			}
@@ -342,16 +342,16 @@
 		created(){
 			let vm = this;
 			setTimeout(function(){
-				vm.setHeight(vm);
-				vm.setPoitnsEvents(vm);
-				vm.setButtonsEvents(vm);
-				vm.setXAxisEvents(vm);
+				this.setHeight(vm);
+				this.setPoitnsEvents(vm);
+				this.setButtonsEvents(vm);
+				this.setXAxisEvents(vm);
 			}, 200)
-			vm.updateData();
+			this.updateData();
 
 			setInterval(() => {
-				if (vm.rangeCheker) {
-					vm.updateData()
+				if (this.rangeCheker) {
+					this.updateData()
 				}
 			}, 15000);
 		}

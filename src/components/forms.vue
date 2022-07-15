@@ -160,8 +160,8 @@
 				return this.$parent.web3
 			},
 			contract(){
-				const vm = this;
-				return exchange.initContract(vm.web3, settings.exchangeAbi, settings.exchangeAddress);
+				 
+				return exchange.initContract(this.web3, settings.exchangeAbi, settings.exchangeAddress);
 			},
 			token1(){ return this.pair.tokens[0]},
 			token2(){ return this.pair.tokens[1]},
@@ -187,8 +187,8 @@
 				]
 			},
 			pickedExpires(){
-				const vm = this;
-				return this.expires.find(el => el.blockAmount == vm.picked)
+				 
+				return this.expires.find(el => el.blockAmount == this.picked)
 			},
 			lastDeal(){
 				return this.$parent.lastDeal
@@ -254,17 +254,17 @@
 				}
 			},
 			pushOrder(pushOrder){
-				const vm = this;
-				if(pushOrder.sig == vm.sign){
-					vm.buyAmount = '';
-					vm.sellAmount = '';
+				 
+				if(pushOrder.sig == this.sign){
+					this.buyAmount = '';
+					this.sellAmount = '';
 					if(pushOrder.orderType == 1){
 						setTimeout(() => {
-							vm.buyLoader = false;
+							this.buyLoader = false;
 						},2500)
 					}else{
 						setTimeout(() => {
-							vm.sellLoader = false;
+							this.sellLoader = false;
 						},2500)
 					}
 				}
@@ -285,151 +285,151 @@
 				this.withdrawBool = false;
 			},
 			getPrice(){
-				const vm = this;
+				 
 				try {
-					vm.buyPrice = vm.updatePrice == true ? vm.lastDeal.price : vm.buyPrice;
-					vm.sellPrice = vm.updatePrice == true ? vm.lastDeal.price : vm.sellPrice;
+					this.buyPrice = this.updatePrice == true ? this.lastDeal.price : this.buyPrice;
+					this.sellPrice = this.updatePrice == true ? this.lastDeal.price : this.sellPrice;
 				} catch(e) {
 					console.log(e);
 				}
 			},
 			depositMetamask(){
-				const vm = this
+				 
 				if (this.depositToken == '0x0000000000000000000000000000000000000000') {
-					exchange.deposit(this.contract, this.from, web3.utils.toWei(vm.depositAmount.toString()), function(h){
+					exchange.deposit(this.contract, this.from, web3.utils.toWei(this.depositAmount.toString()), function(h){
 						if (h !== "undefined") {
-							vm.txhash = String(h);
-							vm.tx = true;
+							this.txhash = String(h);
+							this.tx = true;
 						}
 					}).then(res => console.log(res), err => console.log(err))
 				}else{
 					(async function () {
-						const contract = exchange.initContract(vm.web3, settings.tokenAbi, vm.depositToken)
+						const contract = exchange.initContract(this.web3, settings.tokenAbi, this.depositToken)
 						console.log(contract)
-						await exchange.depositToken(vm.contract, contract, vm.from, vm.spender, vm.depositToken, web3.utils.toWei(vm.depositAmount.toString()), function(h){
+						await exchange.depositToken(this.contract, contract, this.from, this.spender, this.depositToken, web3.utils.toWei(this.depositAmount.toString()), function(h){
 							if (h !== "undefined") {
-								vm.txhash = String(h);
-								vm.tx = true;
+								this.txhash = String(h);
+								this.tx = true;
 							}
 						}).then(res => console.log(res), err => console.log(err))
 					})()
 				}
 			},
 			depositLocal(){
-				const vm = this
-				var amount = web3.utils.toWei(vm.depositAmount.toString())
+				 
+				var amount = web3.utils.toWei(this.depositAmount.toString())
 				if (this.depositToken == '0x0000000000000000000000000000000000000000') {
-					exchangeLocal.depositLocal(vm.web3, Tx, vm.contract, vm.spender, vm.from, vm.$parent.privateKeyBuffer, vm.gasPrice, EthUtil.toBuffer(amount),  function(h){
+					exchangeLocal.depositLocal(this.web3, Tx, this.contract, this.spender, this.from, this.$parent.privateKeyBuffer, this.gasPrice, EthUtil.toBuffer(amount),  function(h){
 							if (h !== "undefined") {
-								vm.txhash = String(h);
-								vm.tx = true;
+								this.txhash = String(h);
+								this.tx = true;
 							}
 						})
 				}else{
-					const tokenContract = new vm.web3.eth.Contract(settings.tokenAbi, vm.depositToken);
-					exchangeLocal.depositTokenLocal(vm.web3, Tx, vm.contract, tokenContract, vm.spender, vm.depositToken, vm.from, vm.$parent.privateKeyBuffer, vm.gasPrice, amount, 0, function(h){
+					const tokenContract = new this.web3.eth.Contract(settings.tokenAbi, this.depositToken);
+					exchangeLocal.depositTokenLocal(this.web3, Tx, this.contract, tokenContract, this.spender, this.depositToken, this.from, this.$parent.privateKeyBuffer, this.gasPrice, amount, 0, function(h){
 							if (h !== "undefined") {
-								vm.txhash = String(h);
-								vm.tx = true;
+								this.txhash = String(h);
+								this.tx = true;
 							}
 						});
 				}
 			},
 			deposit() {
-				const vm = this
+				 
 				if (this.$parent.walletType) {
-					vm.depositMetamask();
+					this.depositMetamask();
 				}else{
-					vm.depositLocal();
+					this.depositLocal();
 				}
 			},
 			withdrawAlert(){
-				const vm = this;
-				if (vm.withdrawAmount !== null && vm.withdrawAmount !== '') {
-					vm.withdrawBool = true;
+				 
+				if (this.withdrawAmount !== null && this.withdrawAmount !== '') {
+					this.withdrawBool = true;
 					// console.log('ok')
 				}
 			},
 			withdrawLocal(){
-				const vm = this
+				 
 				if (this.withdrawToken == '0x0000000000000000000000000000000000000000') {
-					exchangeLocal.withdrawLocal(vm.web3, Tx, vm.contract, vm.spender, vm.from, vm.$parent.privateKeyBuffer, vm.gasPrice, web3.utils.toWei(vm.withdrawAmount.toString()), 0, function(h){
+					exchangeLocal.withdrawLocal(this.web3, Tx, this.contract, this.spender, this.from, this.$parent.privateKeyBuffer, this.gasPrice, web3.utils.toWei(this.withdrawAmount.toString()), 0, function(h){
 							if (h !== "undefined") {
-								vm.txhash = String(h);
-								vm.tx = true;
+								this.txhash = String(h);
+								this.tx = true;
 							}
 						})
 				}else{
-					const tokenContract = new vm.web3.eth.Contract(settings.tokenAbi, vm.withdrawToken);
-					exchangeLocal.withdrawTokenLocal(vm.web3, Tx, vm.contract, tokenContract, vm.spender, vm.withdrawToken, vm.from, vm.$parent.privateKeyBuffer, vm.gasPrice, web3.utils.toWei(vm.withdrawAmount.toString()), 0, function(h){
+					const tokenContract = new this.web3.eth.Contract(settings.tokenAbi, this.withdrawToken);
+					exchangeLocal.withdrawTokenLocal(this.web3, Tx, this.contract, tokenContract, this.spender, this.withdrawToken, this.from, this.$parent.privateKeyBuffer, this.gasPrice, web3.utils.toWei(this.withdrawAmount.toString()), 0, function(h){
 							if (h !== "undefined") {
-								vm.txhash = String(h);
-								vm.tx = true;
+								this.txhash = String(h);
+								this.tx = true;
 							}
 						});
 				}
 
 			},
 			withdrawMetamask(){
-				const vm = this;
-				if (vm.withdrawAmount !== null) {
+				 
+				if (this.withdrawAmount !== null) {
 					if (this.withdrawToken == '0x0000000000000000000000000000000000000000') {
-						exchange.withdraw(this.contract, this.from, web3.utils.toWei(vm.withdrawAmount.toString()), function(h){
+						exchange.withdraw(this.contract, this.from, web3.utils.toWei(this.withdrawAmount.toString()), function(h){
 							if (h !== "undefined") {
-								vm.txhash = String(h);
-								vm.tx = true;
+								this.txhash = String(h);
+								this.tx = true;
 							}
 						}).then(res => console.log(res), err => console.log(err))
 					}else{
-						exchange.withdrawToken(this.contract, this.from, this.withdrawToken, web3.utils.toWei(vm.withdrawAmount.toString()), function(h){
+						exchange.withdrawToken(this.contract, this.from, this.withdrawToken, web3.utils.toWei(this.withdrawAmount.toString()), function(h){
 							if (h !== "undefined") {
-								vm.txhash = String(h);
-								vm.tx = true;
+								this.txhash = String(h);
+								this.tx = true;
 							}
 						}).then(res => console.log(res), err => console.log(err))
 					}
 				}
 			},
 			withdraw() {
-				const vm = this
+				 
 				this.withdrawBool = false;
 				if (this.$parent.walletType) {
-					vm.withdrawMetamask();
+					this.withdrawMetamask();
 				}else{
-					vm.withdrawLocal();
+					this.withdrawLocal();
 				}
 			},
 			postOrder(tokenGet, tokenGive, amountGet, amountGive, orderType){
-				const vm = this;
+				 
 				(async function(){
 					var nonce = Math.floor(Math.random() * 1000000) + 100
 					var expires = null;
 					var hash = null;
-					await web3.eth.getBlockNumber().then(res => expires = res + parseFloat(vm.picked))
-					if(vm.$parent.walletType){
-						await exchange.getSign(vm.web3, vm.from, settings.exchangeAddress, tokenGet.toLowerCase(), web3.utils.toWei(amountGet.toString()), tokenGive.toLowerCase(), web3.utils.toWei(amountGive.toString()), expires, nonce, function(h){
+					await web3.eth.getBlockNumber().then(res => expires = res + parseFloat(this.picked))
+					if(this.$parent.walletType){
+						await exchange.getSign(this.web3, this.from, settings.exchangeAddress, tokenGet.toLowerCase(), web3.utils.toWei(amountGet.toString()), tokenGive.toLowerCase(), web3.utils.toWei(amountGive.toString()), expires, nonce, function(h){
 							hash = h;
 						})
-						.then(res => vm.sign = res)
+						.then(res => this.sign = res)
 					}else{
-						// console.log([vm.web3, settings.exchangeAddress, tokenGet.toLowerCase(), Number(amountGet * 10**18), tokenGive.toLowerCase(), Number(amountGive * 10**18), expires, nonce])
+						// console.log([this.web3, settings.exchangeAddress, tokenGet.toLowerCase(), Number(amountGet * 10**18), tokenGive.toLowerCase(), Number(amountGive * 10**18), expires, nonce])
 						
-						hash = exchange.orderHash(vm.web3, settings.exchangeAddress, tokenGet.toLowerCase(), web3.utils.toWei(amountGet.toString()), tokenGive.toLowerCase(), web3.utils.toWei(amountGive.toString()), expires, nonce);
+						hash = exchange.orderHash(this.web3, settings.exchangeAddress, tokenGet.toLowerCase(), web3.utils.toWei(amountGet.toString()), tokenGive.toLowerCase(), web3.utils.toWei(amountGive.toString()), expires, nonce);
 
 						console.log(hash);
 
-						var signature = vm.web3.eth.accounts.sign(hash, vm.$parent.privateKey);
-						vm.sign = signature.signature;
+						var signature = this.web3.eth.accounts.sign(hash, this.$parent.privateKey);
+						this.sign = signature.signature;
 
 						console.log(signature);
 
-						vm.web3.eth.accounts.recover
+						this.web3.eth.accounts.recover
 					}
 
 					if (orderType == 1) {
-						vm.buyLoader = true;
+						this.buyLoader = true;
 					}else{
-						vm.sellLoader = true;
+						this.sellLoader = true;
 					}
 
 					var price = orderType == 1 ? parseFloat(amountGet) / parseFloat(amountGive) : parseFloat(amountGive) / parseFloat(amountGet);
@@ -438,10 +438,10 @@
 
 					// console.log(date.getTime());
 
-					vm.$socket.emit('pushOrder',{
+					this.$socket.emit('pushOrder',{
 					    "orderType": orderType,
-					    "pair": vm.pair.path,
-					    "maker": vm.from.toLowerCase(),
+					    "pair": this.pair.path,
+					    "maker": this.from.toLowerCase(),
 					    "tokenGet": tokenGet.toLowerCase(),
 					    "amountGet": web3.utils.toWei(amountGet.toString()),
 					    "tokenGive": tokenGive.toLowerCase(),
@@ -451,19 +451,19 @@
 					    "nonce": parseFloat(nonce),
 					    "orderFills": web3.utils.toWei(amountGet.toString()),
 					    "hash": hash,
-					    "sig": vm.sign,
+					    "sig": this.sign,
 					    "expiresTime": Date(),
-					    "expiresDateTime": date.getTime() + vm.pickedExpires.time
+					    "expiresDateTime": date.getTime() + this.pickedExpires.time
 					});
 				})()
 			},
 
 		},
 		created(){
-			const vm = this;
+			 
 			document.onerror = function(message, source, lineno, colno, error) {
-				vm.popup = true;
-				vm.errorTitle = message
+				this.popup = true;
+				this.errorTitle = message
 				console.log(message)
 			}
 			this.picked = this.expires[0].blockAmount;

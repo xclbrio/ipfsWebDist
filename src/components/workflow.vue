@@ -75,23 +75,23 @@
 				return web3;
 			},
 			currentAccount(){
-				const vm = this;
-				return vm.accounts.find(element => element.address == vm.from);
+				 
+				return this.accounts.find(element => element.address == this.from);
 			},
 			privateKeyBuffer(){
-				const vm = this;
-				return EthUtil.toBuffer(vm.privateKey);
+				 
+				return EthUtil.toBuffer(this.privateKey);
 			},
 			privateKey(){
-				const vm = this;
-				return vm.walletType ? '' : vm.currentAccount.privateKey;
+				 
+				return this.walletType ? '' : this.currentAccount.privateKey;
 			},
 			walletType(){
 				return this.from == this.metamaskAccount
 			},
 			contract(){
-				const vm = this;
-				return new vm.web3.eth.Contract(settings.exchangeAbi, settings.exchangeAddress);
+				 
+				return new this.web3.eth.Contract(settings.exchangeAbi, settings.exchangeAddress);
 			},
 			room(){
 				return {
@@ -116,11 +116,11 @@
 		},
 		sockets:{
 			connect(){
-				var vm = this;
+				 
 				console.log('socket connected');
 				
-				vm.$socket.emit('joinRoom', vm.room);
-				vm.preLoader = false
+				this.$socket.emit('joinRoom', this.room);
+				this.preLoader = false
 
 			},
 			trade(trade) {
@@ -129,9 +129,9 @@
 		},
 		watch: {
 			pair() {
-				var vm = this;
-				vm.$socket.emit('joinRoom', vm.room);
-				console.log(vm.room)
+				 
+				this.$socket.emit('joinRoom', this.room);
+				console.log(this.room)
 			},
 
 		},
@@ -157,53 +157,53 @@
 			},
 		},
 		created(){
-			var vm = this;
+			 
 
 			
 
-			vm.accounts = vm.getAccounts();
+			this.accounts = this.getAccounts();
 
-			console.log(vm.contract)
+			console.log(this.contract)
 
 			try{
-				vm.web3.eth.getAccounts()
+				this.web3.eth.getAccounts()
 					.then(res => {
-						// vm.from = res[0];
-						vm.metamaskAccount = res[0];
+						// this.from = res[0];
+						this.metamaskAccount = res[0];
 						try {
-							var curAcc = vm.accounts.find(el => el.address == vm.from).address
+							var curAcc = this.accounts.find(el => el.address == this.from).address
 						} catch(e) {
 							var curAcc = null;
 						}
 
-						if (vm.from == null) {
-							vm.from = vm.metamaskAccount;
+						if (this.from == null) {
+							this.from = this.metamaskAccount;
 						}
 
-						if (vm.from !== curAcc) {
+						if (this.from !== curAcc) {
 
-							vm.from = vm.from == undefined ? vm.accounts[0].address : vm.metamaskAccount;
+							this.from = this.from == undefined ? this.accounts[0].address : this.metamaskAccount;
 						}
 					});
 
-				vm.web3.currentProvider.publicConfigStore.on('update', function() {
-					vm.web3.eth.getAccounts()
+				this.web3.currentProvider.publicConfigStore.on('update', function() {
+					this.web3.eth.getAccounts()
 					.then(res => {
-						// vm.from = res[0];
-						vm.metamaskAccount = res[0];
+						// this.from = res[0];
+						this.metamaskAccount = res[0];
 						try {
-							var curAcc = vm.accounts.find(el => el.address == vm.from).address
+							var curAcc = this.accounts.find(el => el.address == this.from).address
 						} catch(e) {
 							var curAcc = null;
 						}
 
-						if (vm.from == null) {
-							vm.from = vm.metamaskAccount;
+						if (this.from == null) {
+							this.from = this.metamaskAccount;
 						}
 
-						if (vm.from !== curAcc) {
+						if (this.from !== curAcc) {
 
-							vm.from = vm.from == undefined ? vm.accounts[0].address : vm.metamaskAccount;
+							this.from = this.from == undefined ? this.accounts[0].address : this.metamaskAccount;
 						}
 					});
 				});

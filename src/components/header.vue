@@ -201,8 +201,8 @@
 				return this.$parent.accounts
 			},
 			walletButtons() {
-				const vm = this;
-				return vm.localAccounts.length !== 5
+				 
+				return this.localAccounts.length !== 5
 			},
 			etherscan(){
 				return settings.network.etherscan + 'address/' + settings.exchangeAddress
@@ -224,56 +224,56 @@
 		},
 		methods: {
 			closeInput(){
-				const vm = this;
-				vm.newAccount = false;
-				vm.incorrectKey = false;
-				vm.newAccountKey = '';
+				 
+				this.newAccount = false;
+				this.incorrectKey = false;
+				this.newAccountKey = '';
 			},
 			imortKey(){
-				const vm = this;
-				if (vm.newAccountKey.length > 64) {
-					var account = vm.web3.eth.accounts.privateKeyToAccount(vm.newAccountKey);
-					if (account.address !== vm.from && account.address !== vm.metamaskAccount) {
-						vm.localAccounts.push(account);
-						localStorage.setItem('accounts', JSON.stringify(vm.localAccounts))
+				 
+				if (this.newAccountKey.length > 64) {
+					var account = this.web3.eth.accounts.privateKeyToAccount(this.newAccountKey);
+					if (account.address !== this.from && account.address !== this.metamaskAccount) {
+						this.localAccounts.push(account);
+						localStorage.setItem('accounts', JSON.stringify(this.localAccounts))
 					}
-					vm.newAccountKey = '';
-					vm.newAccount = false;
-					vm.incorrectKey = false;
-					vm.picked = account.address;
+					this.newAccountKey = '';
+					this.newAccount = false;
+					this.incorrectKey = false;
+					this.picked = account.address;
 				}else{
-					vm.incorrectKey = true;
+					this.incorrectKey = true;
 				}
 			},
 			generateKey(){
-				const vm = this;
-				if (vm.localAccounts == null) {
-					vm.localAccounts = [];
+				 
+				if (this.localAccounts == null) {
+					this.localAccounts = [];
 				}
-				var account = vm.web3.eth.accounts.create();
-				vm.picked = account.address;
-				vm.localAccounts.push(account);
-				localStorage.setItem('accounts', JSON.stringify(vm.localAccounts))
+				var account = this.web3.eth.accounts.create();
+				this.picked = account.address;
+				this.localAccounts.push(account);
+				localStorage.setItem('accounts', JSON.stringify(this.localAccounts))
 			},
 			deleteWallet(address){
-				const vm = this;
-				if(address !== vm.from){
-					vm.$parent.accounts = vm.localAccounts.filter(function(element) {
+				 
+				if(address !== this.from){
+					this.$parent.accounts = this.localAccounts.filter(function(element) {
 						return element.address !== address;
 					});
-					localStorage.setItem('accounts', JSON.stringify(vm.localAccounts))
+					localStorage.setItem('accounts', JSON.stringify(this.localAccounts))
 				}
 			},
 			copy(id){
-				const vm = this;
+				 
 				let input = document.getElementById(id)
 				input.select()
 				try {
 					document.execCommand('copy');
-					vm.copied = true;
+					this.copied = true;
 
 					setTimeout(function(){
-						vm.copied = false;
+						this.copied = false;
 					}, 3000)
 
 				} catch (err) {
@@ -286,13 +286,13 @@
 				this.menu = this.menu == '' ? 'active' : ''
 			},
 			showBalance(){
-				const vm = this;
+				 
 				try {
-					exchange.balanceOf(vm.contract, vm.pair.tokens[0], vm.from).then(res => {
-						vm.amount1 = Number(web3.utils.fromWei(res.toString())).toFixed(6)
+					exchange.balanceOf(this.contract, this.pair.tokens[0], this.from).then(res => {
+						this.amount1 = Number(web3.utils.fromWei(res.toString())).toFixed(6)
 					})
-					exchange.balanceOf(vm.contract, vm.pair.tokens[1], vm.from).then(res => {
-						vm.amount2 = Number(web3.utils.fromWei(res.toString())).toFixed(6)
+					exchange.balanceOf(this.contract, this.pair.tokens[1], this.from).then(res => {
+						this.amount2 = Number(web3.utils.fromWei(res.toString())).toFixed(6)
 					})
 				} catch(e) {
 					console.log(e);
@@ -319,18 +319,18 @@
 		},
 
 		created() {
-			const vm = this;
+			 
 
 			this.$parent.from = this.picked;
 
 			setInterval(function () {
 				try {
-					vm.showBalance();
+					this.showBalance();
 				} catch(e) {
 					// statements
 					console.log(e);
 				}
-				// vm.checkMetaMask();
+				// this.checkMetaMask();
 			}, 5000)
 
 

@@ -50,9 +50,9 @@
 		},
 		computed: {
 			personalHistoryData() {
-				const vm = this;
-				if (vm.from !== null && vm.from !== undefined) {
-					return vm.historyData.filter(element => element.maker.toLowerCase() == vm.from.toLowerCase() || element.taker.toLowerCase() == vm.from.toLowerCase());
+				 
+				if (this.from !== null && this.from !== undefined) {
+					return this.historyData.filter(element => element.maker.toLowerCase() == this.from.toLowerCase() || element.taker.toLowerCase() == this.from.toLowerCase());
 				}
 			},
 			tokenGetAddress(){
@@ -65,10 +65,10 @@
 		},
 		sockets: {
 			tradeHistoryCollection(tradeHistoryCollection) {
-				const vm = this;
+				 
 				// console.log('tradeHistoryCollection:', tradeHistoryCollection);
 				this.historyData = tradeHistoryCollection._items.reverse()
-				this.historyData.forEach(element => {vm.formating(element)})
+				this.historyData.forEach(element => {this.formating(element)})
 			},
 			trade(trade){
 				this.formating(trade);
@@ -81,7 +81,7 @@
 		},
 		methods: {
 			formating(el){
-				const vm = this;
+				 
 				el.formatDate = new Date(el.date);
 				el.formatDate = `${
 					el.formatDate.getUTCMonth() + 1 < 10 ? '0' + (el.formatDate.getUTCMonth() + 1) : (el.formatDate.getUTCMonth() + 1)}/${
@@ -90,7 +90,7 @@
 					el.formatDate.getUTCMinutes() < 10 ? '0' + el.formatDate.getUTCMinutes() : el.formatDate.getUTCMinutes()}`;
 				
 
-				if(el.tokenGet.toLowerCase() == vm.tokenGetAddress.toLowerCase()){
+				if(el.tokenGet.toLowerCase() == this.tokenGetAddress.toLowerCase()){
 					el.orderType = 'buy'
 					el.price = +(el.amountGive / el.amountGet).toFixed(10);
 					el.amount = el.amountGet

@@ -39,48 +39,48 @@ export default {
 		});
 	},
 	depositLocal(web3_, tx_, exchangeContract_, exchangeAddress_, account_, pkey_, gasPrice_, value_, getHash) {
-		const vm = this;
+		 
 		const depositFunction = exchangeContract_.methods.deposit();
 		const depositAbi = depositFunction.encodeABI();
-		vm.signAndSend(tx_, depositFunction, depositAbi, exchangeAddress_, account_, pkey_, gasPrice_, value_, getHash);
+		this.signAndSend(tx_, depositFunction, depositAbi, exchangeAddress_, account_, pkey_, gasPrice_, value_, getHash);
 	},
 	withdrawLocal(web3_, tx_, exchangeContract_, exchangeAddress_, account_, pkey_, gasPrice_, amount_, value_, getHash) {
-		const vm = this;
+		 
 		const withdrawFunction = exchangeContract_.methods.withdraw(amount_);
 		const withdrawAbi = withdrawFunction.encodeABI();
-		vm.signAndSend(tx_, withdrawFunction, withdrawAbi, exchangeAddress_, account_, pkey_, gasPrice_, value_, getHash);
+		this.signAndSend(tx_, withdrawFunction, withdrawAbi, exchangeAddress_, account_, pkey_, gasPrice_, value_, getHash);
 	},
 	depositTokenLocal(web3_, tx_, exchangeContract_, tokenContract_, exchangeAddress_, tokenAddress_, account_, pkey_, gasPrice_, amount_, value_, getHash) {
-		const vm = this;
+		 
 		const approveFunction = tokenContract_.methods.approve(exchangeAddress_, amount_);
 		const approveAbi = approveFunction.encodeABI();
 		const depositFunction = exchangeContract_.methods.depositToken(tokenAddress_, amount_);
 		const depositAbi = depositFunction.encodeABI();
-		vm.signAndSend(tx_, approveFunction, approveAbi, tokenAddress_, account_, pkey_, gasPrice_, value_, getHash, function(res){
+		this.signAndSend(tx_, approveFunction, approveAbi, tokenAddress_, account_, pkey_, gasPrice_, value_, getHash, function(res){
 			console.log(res);
-			vm.signAndSend(tx_, depositFunction, depositAbi, exchangeAddress_, account_, pkey_, gasPrice_, value_, getHash, res => console.log(res));
+			this.signAndSend(tx_, depositFunction, depositAbi, exchangeAddress_, account_, pkey_, gasPrice_, value_, getHash, res => console.log(res));
 		});
 	},
 	withdrawTokenLocal(web3_, tx_, exchangeContract_, tokenContract_, exchangeAddress_, tokenAddress_, account_, pkey_, gasPrice_, amount_, value_, getHash) {
-		const vm = this;
+		 
 		const withdrawFunction = exchangeContract_.methods.withdrawToken(tokenAddress_, amount_);
 		const withdrawAbi = withdrawFunction.encodeABI();
-		vm.signAndSend(tx_, withdrawFunction, withdrawAbi, exchangeAddress_, account_, pkey_, gasPrice_, value_, getHash, res => console.log(res));
+		this.signAndSend(tx_, withdrawFunction, withdrawAbi, exchangeAddress_, account_, pkey_, gasPrice_, value_, getHash, res => console.log(res));
 	},
 	trade(exchangeContract_, tx_, exchangeAddress_, account_, pkey_, gasPrice_, value_, tokenGet_, amountGet_, tokenGive_, amountGive_, expires_, nonce_, user_, v_, r_, s_, amount_, pair_, gethash){
-		const vm = this;
+		 
 		const tradeFunction = exchangeContract_.methods.trade(tokenGet_, amountGet_, tokenGive_, amountGive_, expires_, nonce_, user_, v_, r_, s_, amount_, pair_);
 		const tradeAbi = tradeFunction.encodeABI();
 
 		console.log(tradeFunction)
-		vm.signAndSend(tx_, tradeFunction, tradeAbi, exchangeAddress_, account_, pkey_, gasPrice_, value_, gethash, function(res){
+		this.signAndSend(tx_, tradeFunction, tradeAbi, exchangeAddress_, account_, pkey_, gasPrice_, value_, gethash, function(res){
 			console.log(res);
 		});
 	},
 	cancel(exchangeContract_, tx_, exchangeAddress_, account_, pkey_, gasPrice_, value_, tokenGet_, amountGet_, tokenGive_, amountGive_, expires_, nonce_, v_, r_, s_, pair, callback){
-		const vm = this;
+		 
 		const cancelFunction = exchangeContract_.methods.cancelOrder(tokenGet_, amountGet_, tokenGive_, amountGive_, expires_, nonce_, v_, r_, s_, pair);
 		const cancelAbi = cancelFunction.encodeABI();
-		vm.signAndSend(tx_, cancelFunction, cancelAbi, exchangeAddress_, account_, pkey_, gasPrice_, value_, callback);
+		this.signAndSend(tx_, cancelFunction, cancelAbi, exchangeAddress_, account_, pkey_, gasPrice_, value_, callback);
 	},
 }
