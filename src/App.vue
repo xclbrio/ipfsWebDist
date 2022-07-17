@@ -11,17 +11,15 @@
 
   import 'normalize.css';
   import headerMain from './components/header.vue'
-
-  import provider from './provider.js'
+  import web3 from './services/connectWeb3'
   import exchange from './exchange.js'
   import settings from './settings.json'
 
-  const web3 = provider.connectWeb3();
-
-
-
   export default {
     name: 'app',
+    components: {
+      headerMain,
+    },
     data: function () {
       return {
         from: '',
@@ -32,23 +30,10 @@
         return exchange.initContract(web3, settings.exchangeAbi, settings.contractAddress);
       }
     },
-    components: {
-      headerMain,
-    },
-    created(){
-       
-
-      setInterval(function () {
-        try {
-          web3.eth.getAccounts().then(res => this.from = res[0]);
-        } catch(e) {
-          
-        }
-        
-      }, 5000)
-      
-
+    created () {
+      console.log(web3)
     }
+    
   }
 
 </script>

@@ -130,8 +130,7 @@
 </template>
 
 <script>
-
-	import provider from '../provider.js'
+	import { contract, web3 } from '../services/connectWeb3.js'
 	import exchange from '../exchange.js'
 	import exchangeLocal from '../exchangeLocal.js'
 	import settings from '../settings.json'
@@ -142,6 +141,10 @@
 
 	export default{
 		name: 'orederbook',
+		props: {
+			pair: Object,
+			from: String,
+		},
 		data() {
 			return {
 				ipfs: ~location.href.indexOf('ipfs'),
@@ -160,9 +163,6 @@
 		computed: {
 			gasPrice(){
 				return this.$parent.gasPrice;
-			},
-			web3(){
-				return this.$parent.web3;
 			},
 			tokenGetAddress(){ return this.pair.tokens[0]},
 			tokenGiveAddress(){ return this.pair.tokens[1]},
@@ -203,11 +203,6 @@
 			txlink(){
 				return `${settings.network.etherscan}tx/${this.txhash}`
 			},
-		},
-		props: {
-			pair: Object,
-			from: String,
-			contract: Object,
 		},
 		watch: {
 			txhash(){
@@ -274,7 +269,6 @@
 					expiresDate.getUTCMinutes() < 10 ? '0' + expiresDate.getUTCMinutes() : expiresDate.getUTCMinutes()}`;
 			},
 			doOrder(i, type){
-				 
 				if (type == 'sell') {
 					var data = this.listBuy[i]
 
@@ -296,7 +290,7 @@
 					this.order.orderType = 'buy'
 				}
 
-				var rsv = exchange.rsv(this.web3, data.sig);
+				var rsv = exchange.rsv(web3, data.sig);
 				this.order = {
 					orderFills: data.orderFills,
 					tokenGet: data.tokenGet,
@@ -329,7 +323,7 @@
 
 				console.log(typeof this.orderData.amount)
 				if (this.$parent.walletType) {
-					await exchange.trade(this.contract, this.from, this.order.tokenGet, web3.utils.numberToHex(this.order.amountGet), this.order.tokenGive, web3.utils.numberToHex(this.order.amountGive), this.order.expires, this.order.nonce, this.order.user, this.order.v, this.order.r, this.order.s, web3.utils.numberToHex(this.orderData.amount), this.pair.path,
+					await exchange.trade(contract, this.from, this.order.tokenGet, web3.utils.numberToHex(this.order.amountGet), this.order.tokenGive, web3.utils.numberToHex(this.order.amountGive), this.order.expires, this.order.nonce, this.order.user, this.order.v, this.order.r, this.order.s, web3.utils.numberToHex(this.orderData.amount), this.pair.path,
 						function(h) {
 							this.txhash = String(h);
 							if (this.txhash !== "undefined") {
@@ -340,7 +334,7 @@
 					}, err => console.log(err))
 				}else{
 					EthUtil.toBuffer(this.order.amountGet)
-					await exchangeLocal.trade(this.contract, Tx, settings.exchangeAddress, this.from, this.$parent.privateKeyBuffer, 5, 0, this.order.tokenGet, web3.utils.numberToHex(this.order.amountGet), this.order.tokenGive, web3.utils.numberToHex(this.order.amountGive), this.order.expires, this.order.nonce, this.order.user, this.order.v, this.order.r, this.order.s, web3.utils.numberToHex(this.orderData.amount), this.pair.path, function(h){
+					await exchangeLocal.trade(contract, Tx, settings.exchangeAddress, this.from, this.$parent.privateKeyBuffer, 5, 0, this.order.tokenGet, web3.utils.numberToHex(this.order.amountGet), this.order.tokenGive, web3.utils.numberToHex(this.order.amountGive), this.order.expires, this.order.nonce, this.order.user, this.order.v, this.order.r, this.order.s, web3.utils.numberToHex(this.orderData.amount), this.pair.path, function(h){
 
 						this.txhash = String(h);
 						if (this.txhash !== "undefined") {
@@ -391,19 +385,19 @@
 			cancelOrder: async function(i){
 				 
 				let data = this.cancelOrderData;
-				let rsv = exchange.rsv(this.web3, data.sig);
+				let rsv = exchange.rsv(web3, data.sig);
 
-				console.log([this.contract, this.from, data.tokenGet, data.amountGet, data.tokenGive, data.amountGive, data.expires, data.nonce, rsv.v, rsv.r, rsv.s, this.pair.path]);
+				console.log([contract, this.from, data.tokenGet, data.amountGet, data.tokenGive, data.amountGive, data.expires, data.nonce, rsv.v, rsv.r, rsv.s, this.pair.path]);
 				if (this.$parent.walletType) {
 
-					await exchange.cancelOrder(this.contract, this.from, data.tokenGet, web3.utils.numberToHex(data.amountGet), data.tokenGive, web3.utils.numberToHex(data.amountGive), data.expires, data.nonce, rsv.v, rsv.r, rsv.s, this.pair.path, function(h){
+					await exchange.cancelOrder(contract, this.from, data.tokenGet, web3.utils.numberToHex(data.amountGet), data.tokenGive, web3.utils.numberToHex(data.amountGive), data.expires, data.nonce, rsv.v, rsv.r, rsv.s, this.pair.path, function(h){
 						this.txhash = String(h);
 						if (this.txhash !== "undefined") {
 							this.popup = true
 						}
 					})
 				}else{
-					await exchangeLocal.cancel(this.contract, Tx, settings.exchangeAddress, this.from, this.$parent.privateKeyBuffer, 5, 0, data.tokenGet, web3.utils.numberToHex(data.amountGet), data.tokenGive, web3.utils.numberToHex(data.amountGive), data.expires, data.nonce, rsv.v, rsv.r, rsv.s, this.pair.path, function(h){
+					await exchangeLocal.cancel(contract, Tx, settings.exchangeAddress, this.from, this.$parent.privateKeyBuffer, 5, 0, data.tokenGet, web3.utils.numberToHex(data.amountGet), data.tokenGive, web3.utils.numberToHex(data.amountGive), data.expires, data.nonce, rsv.v, rsv.r, rsv.s, this.pair.path, function(h){
 							this.txhash = String(h);
 							if (this.txhash !== "undefined") {
 								this.popup = true

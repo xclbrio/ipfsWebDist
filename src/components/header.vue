@@ -60,7 +60,7 @@
 									<span>GAS PRICE: {{$parent.gasPrice}}</span>
 									<input class="gasrange" type="range" v-model="$parent.gasPrice" min="1" max="99" name="gas" id="gas">
 								</div>
-							<div	v-for="item in localAccounts" class="wallet-container__item">
+								<div v-for="item in localAccounts" :key="item.address" class="wallet-container__item">
 									<div class="wallet_radio">
 										<input v-model="picked" type="radio" :id="item.address.substr(38, 42)" :value="item.address">
 										<label :class="{active: picked == item.address}" :value="item.account" :for="item.address.substr(38, 42)"><i></i></label>
@@ -154,6 +154,7 @@
 <script>
 	import exchange from '../exchange.js'
 	import settings from '../settings.json'
+	import { web3, contract } from '../services/connectWeb3' 
 
 	import toolkit from './toolkit.vue'
 
@@ -191,9 +192,6 @@
 					return item.name.toLowerCase().includes(this.search.toLowerCase())
 				})
 			},
-			web3() {
-				return this.$parent.web3
-			},
 			metamaskAccount(){
 				return this.$parent.metamaskAccount
 			},
@@ -201,7 +199,6 @@
 				return this.$parent.accounts
 			},
 			walletButtons() {
-				 
 				return this.localAccounts.length !== 5
 			},
 			etherscan(){
@@ -213,26 +210,20 @@
 			metamask(){
 				return this.metamaskAccount == undefined || this.metamaskAccount == "" ? 'metamask-disconect' : 'metamask'
 			},
-			contract(){
-				return this.$parent.contract
-			}
-
 		},
 		props: {
 			from: String,
 			pair: Object,
 		},
 		methods: {
-			closeInput(){
-				 
+			closeInput () {
 				this.newAccount = false;
 				this.incorrectKey = false;
 				this.newAccountKey = '';
 			},
-			imortKey(){
-				 
+			imortKey () {
 				if (this.newAccountKey.length > 64) {
-					var account = this.web3.eth.accounts.privateKeyToAccount(this.newAccountKey);
+					var account = web3.eth.accounts.privateKeyToAccount(this.newAccountKey);
 					if (account.address !== this.from && account.address !== this.metamaskAccount) {
 						this.localAccounts.push(account);
 						localStorage.setItem('accounts', JSON.stringify(this.localAccounts))
@@ -245,18 +236,16 @@
 					this.incorrectKey = true;
 				}
 			},
-			generateKey(){
-				 
+			generateKey () {
 				if (this.localAccounts == null) {
 					this.localAccounts = [];
 				}
-				var account = this.web3.eth.accounts.create();
+				var account = web3.eth.accounts.create();
 				this.picked = account.address;
 				this.localAccounts.push(account);
 				localStorage.setItem('accounts', JSON.stringify(this.localAccounts))
 			},
-			deleteWallet(address){
-				 
+			deleteWallet (address) {
 				if(address !== this.from){
 					this.$parent.accounts = this.localAccounts.filter(function(element) {
 						return element.address !== address;
@@ -264,8 +253,7 @@
 					localStorage.setItem('accounts', JSON.stringify(this.localAccounts))
 				}
 			},
-			copy(id){
-				 
+			copy (id) {
 				let input = document.getElementById(id)
 				input.select()
 				try {
@@ -282,16 +270,15 @@
 				window.getSelection().removeAllRanges()
 			},
 			
-			showMenu(){
+			showMenu () {
 				this.menu = this.menu == '' ? 'active' : ''
 			},
-			showBalance(){
-				 
+			showBalance () {
 				try {
-					exchange.balanceOf(this.contract, this.pair.tokens[0], this.from).then(res => {
+					exchange.balanceOf(contract, this.pair.tokens[0], this.from).then(res => {
 						this.amount1 = Number(web3.utils.fromWei(res.toString())).toFixed(6)
 					})
-					exchange.balanceOf(this.contract, this.pair.tokens[1], this.from).then(res => {
+					exchange.balanceOf(contract, this.pair.tokens[1], this.from).then(res => {
 						this.amount2 = Number(web3.utils.fromWei(res.toString())).toFixed(6)
 					})
 				} catch(e) {
@@ -299,7 +286,6 @@
 				}
 					
 			},
-			
 		},
 		watch:{
 			pair(){
@@ -319,11 +305,9 @@
 		},
 
 		created() {
-			 
-
 			this.$parent.from = this.picked;
 
-			setInterval(function () {
+			setInterval(() => {
 				try {
 					this.showBalance();
 				} catch(e) {

@@ -13,7 +13,6 @@
 			<orederbook
 				:pair="pair"
 				:from="from"
-				:contract="contract"
 			></orederbook>
 			
 			<div class="window charts-tabs">
@@ -38,15 +37,14 @@
 				:pair="pair"
 				:from="from" >
 			</forms>
-			<chat :from="from" :web3="web3" ref="chat"></chat>
+			<chat :from="from" ref="chat"></chat>
 		</main>
 	</main>
 </template>
 
 <script>
-	import exchange from '../exchange.js'
+	import web3 from '../services/connectWeb3'
 	import settings from '../settings.json'
-	import Tx from 'ethereumjs-tx'
 	import EthUtil from 'ethereumjs-util'
 	import {VueTabs, VTab} from 'vue-nav-tabs'
 	import headerMain from './header.vue'
@@ -59,6 +57,18 @@
 	import loader from './loader.vue'
 
 	export default {
+		components: {
+			loader,
+			headerMain,
+			orederbook,
+			chat,
+			history,
+			forms,
+			chart,
+			depth,
+			VueTabs,
+			VTab,
+		},
 		data(){
 			return{
 				pairs: settings.pairs,
@@ -71,27 +81,17 @@
 			}
 		},
 		computed: {
-			web3(){ 
-				return web3;
-			},
 			currentAccount(){
-				 
 				return this.accounts.find(element => element.address == this.from);
 			},
 			privateKeyBuffer(){
-				 
 				return EthUtil.toBuffer(this.privateKey);
 			},
 			privateKey(){
-				 
 				return this.walletType ? '' : this.currentAccount.privateKey;
 			},
 			walletType(){
 				return this.from == this.metamaskAccount
-			},
-			contract(){
-				 
-				return new this.web3.eth.Contract(settings.exchangeAbi, settings.exchangeAddress);
 			},
 			room(){
 				return {
@@ -110,13 +110,12 @@
 				return this.pairs.find(x => x.path == this.pairID)
 			},
 			defaultAccount(){
-				this.web3.eth.defaultAccount = this.from
-				return this.web3.eth.defaultAccount
+				web3.eth.defaultAccount = this.from
+				return web3.eth.defaultAccount
 			}
 		},
 		sockets:{
 			connect(){
-				 
 				console.log('socket connected');
 				
 				this.$socket.emit('joinRoom', this.room);
@@ -129,23 +128,10 @@
 		},
 		watch: {
 			pair() {
-				 
 				this.$socket.emit('joinRoom', this.room);
 				console.log(this.room)
 			},
 
-		},
-		components: {
-			loader,
-			headerMain,
-			orederbook,
-			chat,
-			history,
-			forms,
-			chart,
-			depth,
-			VueTabs,
-			VTab,
 		},
 		methods: {
 			getAccounts(){
@@ -157,16 +143,9 @@
 			},
 		},
 		created(){
-			 
-
-			
-
 			this.accounts = this.getAccounts();
-
-			console.log(this.contract)
-
 			try{
-				this.web3.eth.getAccounts()
+				web3.eth.getAccounts()
 					.then(res => {
 						// this.from = res[0];
 						this.metamaskAccount = res[0];
@@ -186,8 +165,8 @@
 						}
 					});
 
-				this.web3.currentProvider.publicConfigStore.on('update', function() {
-					this.web3.eth.getAccounts()
+				web3.currentProvider.publicConfigStore.on('update', function() {
+					web3.eth.getAccounts()
 					.then(res => {
 						// this.from = res[0];
 						this.metamaskAccount = res[0];
@@ -202,7 +181,6 @@
 						}
 
 						if (this.from !== curAcc) {
-
 							this.from = this.from == undefined ? this.accounts[0].address : this.metamaskAccount;
 						}
 					});
