@@ -5,192 +5,122 @@
 		</transition>
 		<main class="workflow">
 			<keep-alive>
-				<headerMain
-					:from="from"
-					:pair="pair"
-				></headerMain>
+				<headerMain :pair="pair"/>
 			</keep-alive>
-			<orederbook
-				:pair="pair"
-				:from="from"
-			></orederbook>
+			<orederbook :pair="pair" />
 			
 			<div class="window charts-tabs">
 				<vue-tabs>
 					<v-tab title="PRICE CHART">
 						<keep-alive>
-							<chart :pair="pair"></chart>
+							<chart :pair="pair" />
 						</keep-alive>
 					</v-tab>
-					<v-tab title="DEPTH (SOON)">
-						<depth></depth>
+					<v-tab disabled title="DEPTH (SOON)">
+						<depth />
 					</v-tab>
 				</vue-tabs>
 			</div>
-			<history
-				ref="history"
-				:pair="pair"
-				:from="from">
-			</history>
-			<forms 
-				ref="forms"
-				:pair="pair"
-				:from="from" >
-			</forms>
-			<chat :from="from" ref="chat"></chat>
+			<history ref="history" :pair="pair" />
+			<forms ref="forms" :pair="pair" />
+			<chat ref="chat" />
 		</main>
 	</main>
 </template>
 
 <script>
-	import web3 from '../services/connectWeb3'
-	import settings from '../settings.json'
-	import EthUtil from 'ethereumjs-util'
-	import {VueTabs, VTab} from 'vue-nav-tabs'
-	import headerMain from './header.vue'
-	import orederbook from './orederbook.vue'
-	import history from './history.vue'
-	import chat from './chat.vue'
-	import chart from './chart.vue'
-	import depth from './depth.vue'
-	import forms from './forms.vue'
-	import loader from './loader.vue'
+import settings from '../settings.json'
+import EthUtil from 'ethereumjs-util'
+import {VueTabs, VTab} from 'vue-nav-tabs'
+import headerMain from './header.vue'
+import orederbook from './orederbook.vue'
+import history from './history.vue'
+import chat from './chat.vue'
+import chart from './chart.vue'
+import depth from './depth.vue'
+import forms from './forms.vue'
+import loader from './loader.vue'
+import { mapActions, mapState } from 'vuex'
 
-	export default {
-		components: {
-			loader,
-			headerMain,
-			orederbook,
-			chat,
-			history,
-			forms,
-			chart,
-			depth,
-			VueTabs,
-			VTab,
+export default {
+	components: {
+		loader,
+		headerMain,
+		orederbook,
+		chat,
+		history,
+		forms,
+		chart,
+		depth,
+		VueTabs,
+		VTab,
+	},
+	data(){
+		return{
+			pairs: settings.pairs,
+			tabName: '',
+			preLoader: false,
+			metamaskAccount: '',
+			gasPrice: 5,
+		}
+	},
+	computed: {
+		currentAccount(){
+			return this.accounts.find(element => element.address == this.currentAccount);
 		},
-		data(){
-			return{
-				pairs: settings.pairs,
-				from: null,
-				tabName: '',
-				preLoader: true,
-				accounts: [],
-				metamaskAccount: '',
-				gasPrice: 5,
+		privateKeyBuffer(){
+			return EthUtil.toBuffer(this.privateKey);
+		},
+		privateKey(){
+			return this.walletType ? '' : this.currentAccount.privateKey;
+		},
+		walletType (){
+			return this.currentAccount == this.metamaskAccount
+		},
+		room(){
+			return {
+				pair: this.pair.path,
+				t1: this.pair.tokens[0],
+				t2: this.pair.tokens[1],
 			}
 		},
-		computed: {
-			currentAccount(){
-				return this.accounts.find(element => element.address == this.from);
-			},
-			privateKeyBuffer(){
-				return EthUtil.toBuffer(this.privateKey);
-			},
-			privateKey(){
-				return this.walletType ? '' : this.currentAccount.privateKey;
-			},
-			walletType(){
-				return this.from == this.metamaskAccount
-			},
-			room(){
-				return {
-					pair: this.pair.path,
-					t1: this.pair.tokens[0],
-					t2: this.pair.tokens[1],
-				}
-			},
-			lastDeal(){ 
-				return this.$refs.history.historyData[0];
-			}, 
-			pairID(){
-				return this.$route.params.id
-			},
-			pair(){
-				return this.pairs.find(x => x.path == this.pairID)
-			},
-			defaultAccount(){
-				web3.eth.defaultAccount = this.from
-				return web3.eth.defaultAccount
-			}
+		lastDeal(){ 
+			return this.$refs.history.historyData[0];
+		}, 
+		pairID(){
+			return this.$route.params.id
 		},
-		sockets:{
-			connect(){
-				console.log('socket connected');
-				
-				this.$socket.emit('joinRoom', this.room);
-				this.preLoader = false
-
-			},
-			trade(trade) {
-				console.log('trade:', trade);
-			}
+		pair(){
+			return this.pairs.find(x => x.path == this.pairID)
 		},
-		watch: {
-			pair() {
-				this.$socket.emit('joinRoom', this.room);
-				console.log(this.room)
-			},
+		...mapState(['accounts', 'currentAccount']),
+	},
+	sockets:{
+		connect(){
+			console.log('socket connected');
+			
+			this.$socket.emit('joinRoom', this.room);
+			this.preLoader = false
 
 		},
-		methods: {
-			getAccounts(){
-				if (localStorage.getItem('accounts') == null) {
-					return []
-				} else{
-					return JSON.parse(localStorage.getItem('accounts'))
-				}
-			},
+		trade(trade) {
+			console.log('trade:', trade);
+		}
+	},
+	watch: {
+		pair() {
+			this.$socket.emit('joinRoom', this.room);
+			console.log(this.room)
 		},
-		created(){
-			this.accounts = this.getAccounts();
-			try{
-				web3.eth.getAccounts()
-					.then(res => {
-						// this.from = res[0];
-						this.metamaskAccount = res[0];
-						try {
-							var curAcc = this.accounts.find(el => el.address == this.from).address
-						} catch(e) {
-							var curAcc = null;
-						}
 
-						if (this.from == null) {
-							this.from = this.metamaskAccount;
-						}
-
-						if (this.from !== curAcc) {
-
-							this.from = this.from == undefined ? this.accounts[0].address : this.metamaskAccount;
-						}
-					});
-
-				web3.currentProvider.publicConfigStore.on('update', function() {
-					web3.eth.getAccounts()
-					.then(res => {
-						// this.from = res[0];
-						this.metamaskAccount = res[0];
-						try {
-							var curAcc = this.accounts.find(el => el.address == this.from).address
-						} catch(e) {
-							var curAcc = null;
-						}
-
-						if (this.from == null) {
-							this.from = this.metamaskAccount;
-						}
-
-						if (this.from !== curAcc) {
-							this.from = this.from == undefined ? this.accounts[0].address : this.metamaskAccount;
-						}
-					});
-				});
-			}catch(e){
-				console.log(e)
-			}
-
-		},
-	}
+	},
+	methods: {
+		...mapActions(['getAccounts']),
+	},
+	created(){
+		this.getAccounts();
+	},
+}
 </script>
 
 <style lang="scss">
