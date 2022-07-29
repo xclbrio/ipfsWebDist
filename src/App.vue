@@ -10,30 +10,9 @@
 <script>
 
   import 'normalize.css';
-  import headerMain from './components/header.vue'
-  import web3 from './services/connectWeb3'
-  import exchange from './exchange.js'
-  import settings from './settings.json'
 
   export default {
     name: 'app',
-    components: {
-      headerMain,
-    },
-    data: function () {
-      return {
-        from: '',
-      }
-    },
-    computed: {
-      contract() {
-        return exchange.initContract(web3, settings.exchangeAbi, settings.contractAddress);
-      }
-    },
-    created () {
-      console.log(web3)
-    }
-    
   }
 
 </script>

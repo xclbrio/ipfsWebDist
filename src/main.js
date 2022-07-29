@@ -9,10 +9,7 @@ import VueSocketio from 'vue-socket.io'
 import HighchartsVue from 'highcharts-vue'
 import Highcharts from 'highcharts'
 import stockInit from 'highcharts/modules/stock'
-
-import Web3 from 'web3'
-
-
+import store from './store'
 
 Vue.use(new VueSocketio({
     debug: true,
@@ -22,6 +19,7 @@ Vue.use(VueResource)
 Vue.use(VueTabs)
 Vue.use(VueRouter)
 Vue.use(HighchartsVue)
+Vue.use(store)
 
 stockInit(Highcharts)
 
@@ -45,9 +43,6 @@ Number.prototype.noExponents = function() {
 }
 
 if (window.innerWidth < 800) {
-  var token = location.search;
-  var hash = location.hash;
-
   let curLocation = location.href;
   let mobLocation = curLocation.slice(0, curLocation.indexOf('e')) + "m." + curLocation.slice(curLocation.indexOf('e'));
 
@@ -61,7 +56,8 @@ var router = new VueRouter({
   ]
 })
 
-var app = new Vue({
+new Vue({
   render: h => h(App),
   router,
+  store,
 }).$mount('#app')
