@@ -26,7 +26,7 @@ export default new Vuex.Store({
             return state.currentAccount && state.currentAccount.metamask || false
         },
         metamaskAccount (state) {
-            return state.accounts.find(account => account.metamask)
+            return state.accounts.find(account => account.metamask) || null
         },
         localAccounts (state) {
             return state.accounts.filter(el => !el.metamask)

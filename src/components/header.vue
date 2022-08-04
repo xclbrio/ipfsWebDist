@@ -18,42 +18,40 @@
       <div class="header__pairs">
         <div v-on:click="dropdown = !dropdown" class="cur-pair">
           {{ pair.name }}
-          <span
-            ><svg
-              id="SVGDoc"
-              width="14"
-              height="7"
-              xmlns="http://www.w3.org/2000/svg"
-              version="1.1"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
-              xmlns:avocode="https://avocode.com/"
-              viewBox="0 0 14 7"
-            >
-              <defs>
-                <path d="M283,20l-7,7l-7,-7v0" id="Path-0" />
-                <clipPath id="ClipPath1016">
-                  <use xlink:href="#Path-0" fill="#ffffff" />
-                </clipPath>
-              </defs>
-              <g transform="matrix(1,0,0,1,-269,-20)">
-                <g>
-                  <title>arrow</title>
-                  <use
-                    xlink:href="#Path-0"
-                    fill-opacity="0"
-                    fill="#ffffff"
-                    stroke-linejoin="miter"
-                    stroke-linecap="butt"
-                    stroke-opacity="1"
-                    stroke="#aeaeae"
-                    stroke-miterlimit="50"
-                    stroke-width="2"
-                    clip-path='url("#ClipPath1016")'
-                  />
-                </g>
+          <svg
+            id="SVGDoc"
+            width="14"
+            height="7"
+            xmlns="http://www.w3.org/2000/svg"
+            version="1.1"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            xmlns:avocode="https://avocode.com/"
+            viewBox="0 0 14 7"
+          >
+            <defs>
+              <path d="M283,20l-7,7l-7,-7v0" id="Path-0" />
+              <clipPath id="ClipPath1016">
+                <use xlink:href="#Path-0" fill="#ffffff" />
+              </clipPath>
+            </defs>
+            <g transform="matrix(1,0,0,1,-269,-20)">
+              <g>
+                <title>arrow</title>
+                <use
+                  xlink:href="#Path-0"
+                  fill-opacity="0"
+                  fill="#ffffff"
+                  stroke-linejoin="miter"
+                  stroke-linecap="butt"
+                  stroke-opacity="1"
+                  stroke="#aeaeae"
+                  stroke-miterlimit="50"
+                  stroke-width="2"
+                  clip-path='url("#ClipPath1016")'
+                />
               </g>
-            </svg>
-          </span>
+            </g>
+          </svg>
         </div>
 
         <transition name="slide">
@@ -96,9 +94,9 @@
     <div class="header__cotainer --right">
       <ul :class="menu" class="header__navi">
         <li class="header__navi-item --red">
-          <a target="_blank" href="https://github.com/xclbrio/wiki/issues"
-            >report</a
-          >
+          <a target="_blank" href="https://github.com/xclbrio/wiki/issues">
+            report
+          </a>
         </li>
         <li class="header__navi-item">
           <a target="_blank" href="https://github.com/xclbrio">github</a>
@@ -125,15 +123,19 @@
         <div class="apps__item metamask__logo">
           <i class="ico" :class="metamaskIconClass" alt="metamask"></i>
           <tooltip class="metamask-tooltip">
-            <div v-if="isMetamaskConnected" class="metamask-continer">
+            <div v-if="metamaskAccount" class="metamask-continer">
               <div class="metamask-copy">
                 <input
+                  readonly
                   id="address"
-                  :value="currentAccount.address"
+                  :value="metamaskAccount.address"
                   type="text"
                 />
-                <button @click="copy('address')" class="copy">
-                  <img src="../assets/copy-ico.svg" alt="" />
+                <button
+                  @click="copyToClipboard(metamaskAccount.address)"
+                  class="copy"
+                >
+                  <img src="../assets/copy-ico.svg" alt="copy-ico" />
                 </button>
               </div>
               <div class="indicators">
@@ -214,11 +216,10 @@ export default {
       incorrectKey: false,
       dropdown: false,
       balance: [],
-      alert: true,
       menu: "",
       network: settings.network.name,
-      ladgertooltip: false,
       search: "",
+      copied: false,
     };
   },
   computed: {
@@ -227,9 +228,6 @@ export default {
         return item.name.toLowerCase().includes(this.search.toLowerCase());
       });
     },
-    walletButtons() {
-      return this.accounts.length !== 5;
-    },
     etherscan() {
       return settings.network.etherscan + "address/" + settings.exchangeAddress;
     },
@@ -237,10 +235,10 @@ export default {
       return settings.pairs;
     },
     metamaskIconClass() {
-      return this.isMetamaskConnected ? "metamask" : "metamask-disconect";
+      return this.metamaskAccount ? "metamask" : "metamask-disconect";
     },
     ...mapState(["accounts", "currentAccount"]),
-    ...mapGetters(["isMetamaskConnected"]),
+    ...mapGetters(["metamaskAccount"]),
   },
   props: {
     from: String,
@@ -253,28 +251,12 @@ export default {
       this.newAccountKey = "";
     },
 
-    deleteWallet(address) {
-      if (address !== this.currentAccount) {
-        this.$parent.accounts = this.accounts.filter(function (element) {
-          return element.address !== address;
-        });
-        localStorage.setItem("accounts", JSON.stringify(this.accounts));
-      }
-    },
-    copy(id) {
-      let input = document.getElementById(id);
-      input.select();
-      try {
-        document.execCommand("copy");
-        this.copied = true;
-
-        setTimeout(function () {
-          this.copied = false;
-        }, 3000);
-      } catch (err) {
-        // console.log(err)
-      }
-      window.getSelection().removeAllRanges();
+    copyToClipboard(text) {
+      navigator.clipboard.writeText(text);
+      this.copied = true;
+      setInterval(() => {
+        this.copied = false;
+      }, 3000);
     },
 
     showMenu() {
