@@ -9,6 +9,8 @@ var contract = initContract(abi, contractAddress) //import `abi` and `contractAd
 *
 */
 
+import {web3, contract} from './services/connectWeb3'
+
 export default{
 
 	connectWeb3: function (provider_) {
@@ -121,18 +123,8 @@ export default{
 		});
 		return await str;
 	},
-	balanceOf: async function (contract_, token_, user_) {
-		let str;
-			await contract_.methods.balanceOf(token_, user_).call(
-				function(err, res){
-					if (!err){
-						str = res;
-						// alert(res);
-					} else {
-						// alert(err);
-					}
-			});
-		return await str;
+	balanceOf: async function (token_, user_) {
+		return await contract.methods.balanceOf(token_, user_).call()
 	},
 	order: async function (contract_, from_, tokenGet_, amountGet_, tokenGive_, amountGive_, expires_, nonce_) {
 		let str;

@@ -117,7 +117,7 @@ export default {
 	methods: {
 		...mapActions(['getAccounts']),
 	},
-	created(){
+	created () {
 		this.getAccounts();
 	},
 }
@@ -183,15 +183,6 @@ export default {
 	}
 	.chat{
 		grid-area: ch;
-	}
-	.window{
-		padding: 14px 5px 5px 5px;
-		background-color: $black-three;
-		color: #fff;
-		border: 1px solid  $black;
-		box-sizing: border-box;
-		transition: 0.8s;
-		overflow: hidden;
 	}
 	.window{
 		padding: 14px 5px 5px 5px;

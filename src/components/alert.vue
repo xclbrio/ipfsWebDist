@@ -2,7 +2,7 @@
 	<div class="alert">
 		<header class="alert-header">
 			<h3 :class="ctx" class="alert-title">{{title}}</h3>
-			<div @click="close()" class="close-btn">
+			<div @click="$emit('close')" class="close-btn">
 				<svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 10 10">
 					<g transform="matrix(1,0,0,1,-351,-64)">
 						<path d="M352,72.07107l3.18198,-3.18198l-3.18198,-3.18198l0.7071,-0.70711l3.18198,3.18198l3.18198,-3.18198l0.7071,0.70711l-3.18198,3.18198l3.18198,3.18198l-0.70711,0.7071l-3.18197,-3.18198l-3.18198,3.18198z" fill-opacity="0" fill="#ffffff" stroke-linejoin="miter" stroke-linecap="butt" stroke-opacity="1" stroke="#ffffff" stroke-miterlimit="50" stroke-width="1" id="Path-0"/>
@@ -17,20 +17,16 @@
 </template>
 <script>
 	export default{
-		data(){
-			return {
-
-			}
-		},
 		props: {
-			ctx: String,
-			title: String,
+			ctx: {
+				type: String,
+				default: ''
+			},
+			title: {
+				type: String,
+				default: ''
+			},
 
-		},
-		methods: {
-			close(){
-				this.$parent.closePopup()
-			}
 		}
 	}
 </script>
