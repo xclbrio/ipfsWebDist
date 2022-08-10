@@ -268,11 +268,14 @@ import Tx from "ethereumjs-tx";
 import EthUtil from "ethereumjs-util";
 
 import Alert from "./Alert.vue";
+import { VueTabs, VTab } from "vue-nav-tabs";
 
 export default {
   name: "orederbook",
   components: {
     Alert,
+    VueTabs,
+    VTab,
   },
   props: {
     pair: Object,

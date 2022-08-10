@@ -142,7 +142,9 @@
               @change="setCurrentAccount(metamaskAccount)"
             />
             <label
-              :class="{ active: currentAccount == metamaskAccount }"
+              :class="{
+                active: currentAccount.address === metamaskAccount.address,
+              }"
               :for="metamaskAccount.address"
             >
             </label>

@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import web3 from '../services/connectWeb3'
 import VuexPersistence from 'vuex-persist'
+import { pairs } from '../settings.json'
+import router from '../router'
 
 Vue.use(Vuex)
 
@@ -18,6 +20,7 @@ export default new Vuex.Store({
             walletType: '',
             accounts: [],
             privateKey: '',
+            pairs
         }
     },
 
@@ -31,6 +34,9 @@ export default new Vuex.Store({
         localAccounts (state) {
             return state.accounts.filter(el => !el.metamask)
         },
+        currentPair (state) {
+            return state.pairs.find((pair) => pair.path === router.currentRoute.params.id)
+        }
     },
 
     mutations: {

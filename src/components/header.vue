@@ -237,12 +237,11 @@ export default {
     metamaskIconClass() {
       return this.metamaskAccount ? "metamask" : "metamask-disconect";
     },
+     pair() {
+      return this.pairs.find((x) => x.path == this.$route.params.id);
+    },
     ...mapState(["accounts", "currentAccount"]),
     ...mapGetters(["metamaskAccount"]),
-  },
-  props: {
-    from: String,
-    pair: Object,
   },
   methods: {
     closeInput() {

@@ -1,24 +1,20 @@
 import Vue from 'vue'
-import VueTabs from 'vue-nav-tabs'
 import VueResource from 'vue-resource'
 import VueRouter from 'vue-router'
 import App from './App.vue'
 import settings from './settings.json'
-import workflow from './components/workflow.vue'
 import VueSocketio from 'vue-socket.io'
-import HighchartsVue from 'highcharts-vue'
 import Highcharts from 'highcharts'
 import stockInit from 'highcharts/modules/stock'
 import store from './store'
+import router from './router'
 
 Vue.use(new VueSocketio({
     debug: true,
     connection: settings.wsURL
 }))
 Vue.use(VueResource)
-Vue.use(VueTabs)
 Vue.use(VueRouter)
-Vue.use(HighchartsVue)
 Vue.use(store)
 
 stockInit(Highcharts)
@@ -49,12 +45,6 @@ if (window.innerWidth < 800) {
   location.replace(`${mobLocation}`)
 }
 
-var router = new VueRouter({
-  routes: [
-    { path: '/:id', name: 'pair', component: workflow },
-    { path: '', redirect: settings.pairs[0].path },
-  ]
-})
 
 new Vue({
   render: h => h(App),

@@ -1,141 +1,12 @@
 	<template>
-  <div @click="slideDownChat" class="window forms">
+  <div class="window forms">
     <vue-tabs>
       <v-tab title="BUY">
-        <div class="forms__content">
-          <form class="forms__box form__buy">
-            <div class="form__buy__amount">
-              <p class="input__title">AMOUNT</p>
-              <p class="input__contaner --amount">
-                <input
-                  v-model="buyAmount"
-                  placeholder="amount_"
-                  type="number"
-                  step="any"
-                /><span class="symbol-tooltip">{{ pair.symbols[0] }}</span>
-              </p>
-            </div>
-            <div class="form__buy__price">
-              <p class="input__title">PRICE</p>
-              <p class="input__contaner --price">
-                <input
-                  @click="updatePrice = false"
-                  onClick="this.select();"
-                  v-model="buyPrice"
-                  placeholder="price_"
-                  type="number"
-                  step="any"
-                /><span class="symbol-tooltip">{{ pair.symbols[1] }}</span>
-              </p>
-            </div>
-            <p class="--greyish">
-              TOTAL = <span class="--white">{{ buyTotal }}</span>
-              {{ pair.symbols[1].toUpperCase() }}
-            </p>
-            <p class="--greyish">
-              CHOOSE EXPIRES:
-              <span v-for="item in expires" :key="item.blockAmount">
-                <input
-                  class="radio-btn"
-                  type="radio"
-                  :id="item.title"
-                  :value="item.blockAmount"
-                  v-model="picked"
-                />
-                <label
-                  :class="{ active: picked == item.blockAmount }"
-                  class="expries"
-                  :for="item.title"
-                  >{{ item.title }}</label
-                >
-              </span>
-            </p>
-            <p class="button-container">
-              <button
-                @click.prevent="
-                  postOrder(token1, token2, buyAmount, buyTotal, 1)
-                "
-                class="button"
-              >
-                <img
-                  v-if="buyLoader"
-                  class="button__loader"
-                  src="../assets/loader.svg"
-                  alt=""
-                /><span v-else class="button__text">PLACE BUY ORDER</span>
-              </button>
-            </p>
-          </form>
-        </div>
+        <order-placement />
       </v-tab>
 
       <v-tab title="SELL">
-        <div class="forms__content">
-          <form class="forms__box form__sell">
-            <div class="form__buy__amount">
-              <p class="input__title">AMOUNT</p>
-              <p class="input__contaner --amount">
-                <input
-                  v-model="sellAmount"
-                  placeholder="amount_"
-                  type="number"
-                  step="any"
-                /><span class="symbol-tooltip">{{ pair.symbols[0] }}</span>
-              </p>
-            </div>
-            <div class="form__buy__price">
-              <p class="input__title">PRICE</p>
-              <p class="input__contaner --price">
-                <input
-                  @click="updatePrice = false"
-                  onClick="this.select();"
-                  v-model="sellPrice"
-                  placeholder="price_"
-                  type="number"
-                  step="any"
-                /><span class="symbol-tooltip">{{ pair.symbols[1] }}</span>
-              </p>
-            </div>
-            <p class="--greyish">
-              TOTAL = <span class="--white">{{ sellTotal }}</span>
-              {{ pair.symbols[1].toUpperCase() }}
-            </p>
-            <p class="--greyish">
-              CHOOSE EXPIRES:
-              <span v-for="item in expires">
-                <input
-                  class="radio-btn"
-                  type="radio"
-                  :id="item.title"
-                  :value="item.blockAmount"
-                  v-model="picked"
-                />
-                <label
-                  :class="{ active: picked == item.blockAmount }"
-                  class="expries"
-                  :for="item.title"
-                  >{{ item.title }}</label
-                >
-              </span>
-            </p>
-
-            <p class="button-container">
-              <button
-                @click.prevent="
-                  postOrder(token2, token1, sellTotal, sellAmount, 0)
-                "
-                class="button sell"
-              >
-                <img
-                  v-if="sellLoader"
-                  class="button__loader"
-                  src="../assets/loader.svg"
-                  alt=""
-                /><span v-else class="button__text">PLACE SELL ORDER</span>
-              </button>
-            </p>
-          </form>
-        </div>
+        <order-placement :isSellOrder="true" />
       </v-tab>
 
       <v-tab title="MANAGE">
@@ -143,19 +14,21 @@
           <form class="forms__box form__manage">
             <div class="form__sell__deposit">
               <p class="--greyish input__title">
-                DEPOSIT -><span v-for="item in tokensData"
-                  ><input
+                DEPOSIT ->
+                <span v-for="item in tokensData" :key="item.token">
+                  <input
                     class="radio-btn"
                     type="radio"
                     :id="item.name"
                     :value="item.token"
                     v-model="depositToken"
-                  /><label
+                  />
+                  <label
                     :class="{ active: depositToken == item.token }"
                     class="expries"
                     :for="item.name"
                     >{{ item.name }}</label
-                  ></span
+                  > </span
                 >[choose currency]
               </p>
               <p class="input__contaner --amount">
@@ -173,20 +46,26 @@
           <form class="forms__box form__manage">
             <div class="form__sell__withdraw">
               <p class="--greyish input__title">
-                WITHDRAW -><span v-for="item in tokensData"
-                  ><input
+                WITHDRAW ->
+                <span
+                  v-for="item in tokensData"
+                  :key="item.tokensData + 'withdraw'"
+                >
+                  <input
                     class="radio-btn"
                     type="radio"
                     :id="item.token"
                     :value="item.token"
                     v-model="withdrawToken"
-                  /><label
+                  />
+                  <label
                     :class="{ active: withdrawToken == item.token }"
                     class="expries"
                     :for="item.token"
                     >{{ item.name }}</label
-                  ></span
-                >[choose currency]
+                  >
+                </span>
+                [choose currency]
               </p>
               <p class="input__contaner --amount">
                 <input
@@ -207,7 +86,12 @@
       </v-tab>
     </vue-tabs>
 
-    <alert ctx="error" :title="errorTitle" v-show="popup">
+    <alert
+      ctx="error"
+      :title="errorTitle"
+      v-show="popup"
+      @close="popup = false"
+    >
       <div class="reslove-container">
         <div class="reslove">
           <div>PLEASE CHECK:</div>
@@ -251,12 +135,17 @@ import settings from "../settings.json";
 import exchangeLocal from "../exchangeLocal.js";
 import Tx from "ethereumjs-tx";
 import EthUtil from "ethereumjs-util";
-import Alert from "./Alert.vue";
+import Alert from "@/components/Alert";
+import OrderPlacement from "@/components/OrderPlacement";
+import { VueTabs, VTab } from "vue-nav-tabs";
 
 export default {
-  name: "forms",
+  name: "Trade",
   components: {
     Alert,
+    OrderPlacement,
+    VueTabs,
+    VTab,
   },
   data() {
     return {
