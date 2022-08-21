@@ -191,6 +191,7 @@
 </template>
 
 <script>
+import { web3 } from "@/services/connectWeb3";
 import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
 import Tooltip from "./Tooltip.vue";
 import Alert from "./Alert.vue";
@@ -217,6 +218,11 @@ export default {
     },
     ...mapState(["accounts", "currentAccount"]),
     ...mapGetters(["metamaskAccount", "localAccounts"]),
+  },
+  mounted() {
+    if (window.ethereum) {
+      window.ethereum.on("accountsChanged", this.getAccounts);
+    }
   },
   methods: {
     hideImportKeyForm() {
@@ -248,7 +254,7 @@ export default {
       this.isModalShown = false;
       this.accountToDelete = null;
     },
-    ...mapActions(["createAccount", "importAccount"]),
+    ...mapActions(["createAccount", "importAccount", "getAccounts"]),
     ...mapMutations(["setCurrentAccount", "deleteAccount"]),
   },
 };

@@ -65,22 +65,25 @@ export default {
     lastDeal() {
       return this.$refs.history.historyData[0];
     },
+    currentPairData() {
+      return {
+        pair: this.currentPair.path,
+        t1: this.currentPair.tokens[0],
+        t2: this.currentPair.tokens[1],
+      };
+    },
     ...mapState(["accounts", "currentAccount"]),
     ...mapGetters(["currentPair"]),
   },
   sockets: {
     connect() {
-      this.$socket.emit("joinRoom", this.room);
+      this.$socket.emit("joinRoom", this.currentPairData);
       this.preLoader = false;
     },
   },
   watch: {
     currentPair() {
-      this.$socket.emit("joinRoom", {
-        pair: this.currentPair.path,
-        t1: this.currentPair.tokens[0],
-        t2: this.currentPair.tokens[1],
-      });
+      this.$socket.emit("joinRoom", this.currentPairData);
     },
   },
   methods: {

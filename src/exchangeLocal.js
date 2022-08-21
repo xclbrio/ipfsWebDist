@@ -1,3 +1,4 @@
+
 export default {
 	signAndSend(tx_, contractFunction_, functionAbi_, contractAddress_, account_, pkey_, gasPrice_, value_, getHash, callback) {
 		let estimatedGas;

@@ -11,77 +11,8 @@
 
       <v-tab title="MANAGE">
         <div class="forms__content">
-          <form class="forms__box form__manage">
-            <div class="form__sell__deposit">
-              <p class="--greyish input__title">
-                DEPOSIT ->
-                <span v-for="item in tokensData" :key="item.token">
-                  <input
-                    class="radio-btn"
-                    type="radio"
-                    :id="item.name"
-                    :value="item.token"
-                    v-model="depositToken"
-                  />
-                  <label
-                    :class="{ active: depositToken == item.token }"
-                    class="expries"
-                    :for="item.name"
-                    >{{ item.name }}</label
-                  > </span
-                >[choose currency]
-              </p>
-              <p class="input__contaner --amount">
-                <input
-                  v-model="depositAmount"
-                  placeholder="amount_"
-                  type="number"
-                  step="any"
-                /><button @click.prevent="deposit" class="btn btn_deposit">
-                  SEND
-                </button>
-              </p>
-            </div>
-          </form>
-          <form class="forms__box form__manage">
-            <div class="form__sell__withdraw">
-              <p class="--greyish input__title">
-                WITHDRAW ->
-                <span
-                  v-for="item in tokensData"
-                  :key="item.tokensData + 'withdraw'"
-                >
-                  <input
-                    class="radio-btn"
-                    type="radio"
-                    :id="item.token"
-                    :value="item.token"
-                    v-model="withdrawToken"
-                  />
-                  <label
-                    :class="{ active: withdrawToken == item.token }"
-                    class="expries"
-                    :for="item.token"
-                    >{{ item.name }}</label
-                  >
-                </span>
-                [choose currency]
-              </p>
-              <p class="input__contaner --amount">
-                <input
-                  v-model="withdrawAmount"
-                  placeholder="amount_"
-                  type="number"
-                  step="any"
-                /><button
-                  @click.prevent="withdrawAlert"
-                  class="btn btn_deposit"
-                >
-                  SEND
-                </button>
-              </p>
-            </div>
-          </form>
+          <menage-deposit />
+          <menage-deposit :isWithdraw="true" />
         </div>
       </v-tab>
     </vue-tabs>
@@ -89,8 +20,8 @@
     <alert
       ctx="error"
       :title="errorTitle"
-      v-show="popup"
-      @close="popup = false"
+      v-if="showErrorModal"
+      @close="showErrorModal = false"
     >
       <div class="reslove-container">
         <div class="reslove">
@@ -105,38 +36,13 @@
         <div class="support-btn">SUPPORT</div>
       </div>
     </alert>
-    <alert v-show="withdrawBool" ctx="error" title="ATTENTION">
-      <p class="withdraw-alert">
-        <span>All your orders will be deleted!</span>
-        <button @click.prevent="withdraw" class="btn accept">Accept</button>
-      </p>
-    </alert>
-    <alert ctx="transaction" title="TRANSACTION" v-show="tx">
-      <div class="copy-input">
-        <div class="container">
-          <input id="hash" ref="hash" v-model="txhash" type="text" /><button
-            @click.stop.prevent="copyHash"
-            class="copy"
-          >
-            <img src="../assets/copy-ico.svg" alt="" />
-          </button>
-        </div>
-        <div class="etherscan">
-          <a target="_blank" :href="txlink">VIEW ON ETHERSCAN</a>
-        </div>
-      </div>
-    </alert>
   </div>
 </template>
 
 <script>
-import exchange from "../exchange.js";
-import settings from "../settings.json";
-import exchangeLocal from "../exchangeLocal.js";
-import Tx from "ethereumjs-tx";
-import EthUtil from "ethereumjs-util";
 import Alert from "@/components/Alert";
 import OrderPlacement from "@/components/OrderPlacement";
+import MenageDeposit from "@/components/MenageDeposit";
 import { VueTabs, VTab } from "vue-nav-tabs";
 
 export default {
@@ -144,129 +50,16 @@ export default {
   components: {
     Alert,
     OrderPlacement,
+    MenageDeposit,
     VueTabs,
     VTab,
   },
   data() {
     return {
-      settings: settings,
-      depositToken: this.pair.tokens[0],
-      withdrawToken: this.pair.tokens[0],
-      buyAmount: "",
-      buyPrice: "",
-      sellAmount: "",
-      sellPrice: "",
-      depositAmount: null,
-      withdrawAmount: null,
-      hash: null,
-      sign: null,
-      updatePrice: true,
-
-      spender: settings.exchangeAddress,
-
-      picked: "",
-
-      popup: false,
-      withdrawBool: false,
+      showErrorModal: false,
       error: "",
       errorTitle: "",
-
-      tx: false,
-      txhash: "",
-      buyLoader: false,
-      sellLoader: false,
     };
-  },
-
-  computed: {
-    gasPrice() {
-      return this.$parent.gasPrice;
-    },
-    contract() {
-      return exchange.initContract(
-        this.web3,
-        settings.exchangeAbi,
-        settings.exchangeAddress
-      );
-    },
-    token1() {
-      return this.pair.tokens[0];
-    },
-    token2() {
-      return this.pair.tokens[1];
-    },
-    txlink() {
-      return `${settings.network.etherscan}tx/${this.txhash}`;
-    },
-    blockSpeed() {
-      return this.settings.blockSpeed;
-    },
-    expires() {
-      return [
-        {
-          title: "1H",
-          time: 3600000,
-          blockAmount: parseFloat((3600 / this.blockSpeed).toFixed(0)),
-        },
-        {
-          title: "1D",
-          time: 86400000,
-          blockAmount: parseFloat((86400 / this.blockSpeed).toFixed(0)),
-        },
-        {
-          title: "1W",
-          time: 604800000,
-          blockAmount: parseFloat((604800 / this.blockSpeed).toFixed(0)),
-        },
-      ];
-    },
-    pickedExpires() {
-      return this.expires.find((el) => el.blockAmount == this.picked);
-    },
-    lastDeal() {
-      return this.$parent.lastDeal;
-    },
-    tokensData() {
-      return [
-        {
-          name: this.pair.symbols[0],
-          token: this.pair.tokens[0],
-        },
-        {
-          name: this.pair.symbols[1],
-          token: this.pair.tokens[1],
-        },
-      ];
-    },
-    resource() {
-      return this.$resource("https://exapi1.herokuapp.com/v0.1/pushOrder");
-    },
-    buyTotal() {
-      var res = this.buyAmount * this.buyPrice;
-      return +res.toFixed(10);
-    },
-    sellTotal() {
-      var res = this.sellAmount * this.sellPrice;
-      return +res.toFixed(10);
-    },
-  },
-  watch: {
-    lastDeal() {
-      this.buyPrice = "";
-      this.sellPrice = "";
-      this.getPrice();
-    },
-    tokensData() {
-      this.depositToken = this.pair.tokens[0];
-      this.withdrawToken = this.pair.tokens[0];
-    },
-    pair() {
-      this.updatePrice = true;
-      this.buyPrice = "";
-      this.sellPrice = "";
-      console.log("something changed");
-      this.getPrice();
-    },
   },
   sockets: {
     error(error) {
@@ -279,339 +72,12 @@ export default {
         this.popup = true;
         this.errorTitle = `Error ${error}`;
       }
-    },
-    trade(trade) {
-      if (this.updatePrice) {
-        this.buyPrice = "";
-        this.getPrice();
-      }
-    },
-    pushOrder(pushOrder) {
-      if (pushOrder.sig == this.sign) {
-        this.buyAmount = "";
-        this.sellAmount = "";
-        if (pushOrder.orderType == 1) {
-          setTimeout(() => {
-            this.buyLoader = false;
-          }, 2500);
-        } else {
-          setTimeout(() => {
-            this.sellLoader = false;
-          }, 2500);
-        }
-      }
-    },
-  },
-  props: {
-    pair: Object,
-    from: String,
+    }
   },
   methods: {
     slideDownChat() {
-      var chat = document.querySelector(".aside-right");
+      const chat = document.querySelector(".aside-right");
       chat.classList.remove("active");
-    },
-    closePopup() {
-      this.popup = false;
-      this.tx = false;
-      this.withdrawBool = false;
-    },
-    getPrice() {
-      try {
-        this.buyPrice =
-          this.updatePrice == true ? this.lastDeal.price : this.buyPrice;
-        this.sellPrice =
-          this.updatePrice == true ? this.lastDeal.price : this.sellPrice;
-      } catch (e) {
-        console.log(e);
-      }
-    },
-    depositMetamask() {
-      if (this.depositToken == "0x0000000000000000000000000000000000000000") {
-        exchange
-          .deposit(
-            this.contract,
-            this.from,
-            web3.utils.toWei(this.depositAmount.toString()),
-            function (h) {
-              if (h !== "undefined") {
-                this.txhash = String(h);
-                this.tx = true;
-              }
-            }
-          )
-          .then(
-            (res) => console.log(res),
-            (err) => console.log(err)
-          );
-      } else {
-        (async function () {
-          const contract = exchange.initContract(
-            this.web3,
-            settings.tokenAbi,
-            this.depositToken
-          );
-          console.log(contract);
-          await exchange
-            .depositToken(
-              this.contract,
-              contract,
-              this.from,
-              this.spender,
-              this.depositToken,
-              web3.utils.toWei(this.depositAmount.toString()),
-              function (h) {
-                if (h !== "undefined") {
-                  this.txhash = String(h);
-                  this.tx = true;
-                }
-              }
-            )
-            .then(
-              (res) => console.log(res),
-              (err) => console.log(err)
-            );
-        })();
-      }
-    },
-    depositLocal() {
-      var amount = web3.utils.toWei(this.depositAmount.toString());
-      if (this.depositToken == "0x0000000000000000000000000000000000000000") {
-        exchangeLocal.depositLocal(
-          this.web3,
-          Tx,
-          this.contract,
-          this.spender,
-          this.from,
-          this.$parent.privateKeyBuffer,
-          this.gasPrice,
-          EthUtil.toBuffer(amount),
-          function (h) {
-            if (h !== "undefined") {
-              this.txhash = String(h);
-              this.tx = true;
-            }
-          }
-        );
-      } else {
-        const tokenContract = new this.web3.eth.Contract(
-          settings.tokenAbi,
-          this.depositToken
-        );
-        exchangeLocal.depositTokenLocal(
-          this.web3,
-          Tx,
-          this.contract,
-          tokenContract,
-          this.spender,
-          this.depositToken,
-          this.from,
-          this.$parent.privateKeyBuffer,
-          this.gasPrice,
-          amount,
-          0,
-          function (h) {
-            if (h !== "undefined") {
-              this.txhash = String(h);
-              this.tx = true;
-            }
-          }
-        );
-      }
-    },
-    deposit() {
-      if (this.$parent.walletType) {
-        this.depositMetamask();
-      } else {
-        this.depositLocal();
-      }
-    },
-    withdrawAlert() {
-      if (this.withdrawAmount !== null && this.withdrawAmount !== "") {
-        this.withdrawBool = true;
-        // console.log('ok')
-      }
-    },
-    withdrawLocal() {
-      if (this.withdrawToken == "0x0000000000000000000000000000000000000000") {
-        exchangeLocal.withdrawLocal(
-          this.web3,
-          Tx,
-          this.contract,
-          this.spender,
-          this.from,
-          this.$parent.privateKeyBuffer,
-          this.gasPrice,
-          web3.utils.toWei(this.withdrawAmount.toString()),
-          0,
-          function (h) {
-            if (h !== "undefined") {
-              this.txhash = String(h);
-              this.tx = true;
-            }
-          }
-        );
-      } else {
-        const tokenContract = new this.web3.eth.Contract(
-          settings.tokenAbi,
-          this.withdrawToken
-        );
-        exchangeLocal.withdrawTokenLocal(
-          this.web3,
-          Tx,
-          this.contract,
-          tokenContract,
-          this.spender,
-          this.withdrawToken,
-          this.from,
-          this.$parent.privateKeyBuffer,
-          this.gasPrice,
-          web3.utils.toWei(this.withdrawAmount.toString()),
-          0,
-          function (h) {
-            if (h !== "undefined") {
-              this.txhash = String(h);
-              this.tx = true;
-            }
-          }
-        );
-      }
-    },
-    withdrawMetamask() {
-      if (this.withdrawAmount !== null) {
-        if (
-          this.withdrawToken == "0x0000000000000000000000000000000000000000"
-        ) {
-          exchange
-            .withdraw(
-              this.contract,
-              this.from,
-              web3.utils.toWei(this.withdrawAmount.toString()),
-              function (h) {
-                if (h !== "undefined") {
-                  this.txhash = String(h);
-                  this.tx = true;
-                }
-              }
-            )
-            .then(
-              (res) => console.log(res),
-              (err) => console.log(err)
-            );
-        } else {
-          exchange
-            .withdrawToken(
-              this.contract,
-              this.from,
-              this.withdrawToken,
-              web3.utils.toWei(this.withdrawAmount.toString()),
-              function (h) {
-                if (h !== "undefined") {
-                  this.txhash = String(h);
-                  this.tx = true;
-                }
-              }
-            )
-            .then(
-              (res) => console.log(res),
-              (err) => console.log(err)
-            );
-        }
-      }
-    },
-    withdraw() {
-      this.withdrawBool = false;
-      if (this.$parent.walletType) {
-        this.withdrawMetamask();
-      } else {
-        this.withdrawLocal();
-      }
-    },
-    postOrder(tokenGet, tokenGive, amountGet, amountGive, orderType) {
-      (async function () {
-        var nonce = Math.floor(Math.random() * 1000000) + 100;
-        var expires = null;
-        var hash = null;
-        await web3.eth
-          .getBlockNumber()
-          .then((res) => (expires = res + parseFloat(this.picked)));
-        if (this.$parent.walletType) {
-          await exchange
-            .getSign(
-              this.web3,
-              this.from,
-              settings.exchangeAddress,
-              tokenGet.toLowerCase(),
-              web3.utils.toWei(amountGet.toString()),
-              tokenGive.toLowerCase(),
-              web3.utils.toWei(amountGive.toString()),
-              expires,
-              nonce,
-              function (h) {
-                hash = h;
-              }
-            )
-            .then((res) => (this.sign = res));
-        } else {
-          // console.log([this.web3, settings.exchangeAddress, tokenGet.toLowerCase(), Number(amountGet * 10**18), tokenGive.toLowerCase(), Number(amountGive * 10**18), expires, nonce])
-
-          hash = exchange.orderHash(
-            this.web3,
-            settings.exchangeAddress,
-            tokenGet.toLowerCase(),
-            web3.utils.toWei(amountGet.toString()),
-            tokenGive.toLowerCase(),
-            web3.utils.toWei(amountGive.toString()),
-            expires,
-            nonce
-          );
-
-          console.log(hash);
-
-          var signature = this.web3.eth.accounts.sign(
-            hash,
-            this.$parent.privateKey
-          );
-          this.sign = signature.signature;
-
-          console.log(signature);
-
-          this.web3.eth.accounts.recover;
-        }
-
-        if (orderType == 1) {
-          this.buyLoader = true;
-        } else {
-          this.sellLoader = true;
-        }
-
-        var price =
-          orderType == 1
-            ? parseFloat(amountGet) / parseFloat(amountGive)
-            : parseFloat(amountGive) / parseFloat(amountGet);
-
-        let date = new Date();
-
-        // console.log(date.getTime());
-
-        this.$socket.emit("pushOrder", {
-          orderType: orderType,
-          pair: this.pair.path,
-          maker: this.from.toLowerCase(),
-          tokenGet: tokenGet.toLowerCase(),
-          amountGet: web3.utils.toWei(amountGet.toString()),
-          tokenGive: tokenGive.toLowerCase(),
-          amountGive: web3.utils.toWei(amountGive.toString()),
-          price: price,
-          expires: expires,
-          nonce: parseFloat(nonce),
-          orderFills: web3.utils.toWei(amountGet.toString()),
-          hash: hash,
-          sig: this.sign,
-          expiresTime: Date(),
-          expiresDateTime: date.getTime() + this.pickedExpires.time,
-        });
-      })();
     },
   },
   created() {
@@ -620,7 +86,6 @@ export default {
       this.errorTitle = message;
       console.log(message);
     };
-    this.picked = this.expires[0].blockAmount;
   },
 };
 </script>

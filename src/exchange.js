@@ -10,6 +10,7 @@ var contract = initContract(abi, contractAddress) //import `abi` and `contractAd
 */
 
 import { web3, contract } from "./services/connectWeb3";
+import { tokenAbi, exchangeAddress } from "@/settings.json";
 
 export default {
   // connectWeb3: function (provider_) {
@@ -22,7 +23,7 @@ export default {
   // connectWebsocketWeb3: function (provider_) {
   //   return new Web3(new Web3.providers.WebsocketProvider(provider_));
   // },
-  initContract: function (abi_, contractAddress_) {
+  initContract(abi_, contractAddress_) {
     return new web3.eth.Contract(abi_, contractAddress_);
   },
   getAccount: async function (accountIndex_) {
@@ -30,112 +31,58 @@ export default {
     return account[accountIndex_];
   },
 
-  deposit: async function (contract_, from_, amount_, callback) {
-    let str;
-    await contract_.methods
-      .deposit()
-      .send({ from: from_, value: amount_ }, function (err, hash) {
-        if (!err) {
-          str = hash;
-          callback(hash);
-          // alert(`https://kovan.etherscan.io/tx/${hash}`);
-        } else {
-          // alert(err);
-        }
-      });
+  // deposit: async function (contract_, from_, amount_, callback) {
+  //   let str;
+  //   await contract_.methods
+  //     .deposit()
+  //     .send({ from: from_, value: amount_ }, function (err, hash) {
+  //       if (!err) {
+  //         str = hash;
+  //         callback(hash);
+  //         // alert(`https://kovan.etherscan.io/tx/${hash}`);
+  //       } else {
+  //         // alert(err);
+  //       }
+  //     });
 
-    return await str;
-  },
-  withdraw: async function (contract_, from_, amount_, callback) {
-    let str;
-    await contract_.methods
-      .withdraw(amount_)
-      .send({ from: from_ }, function (err, hash) {
-        if (!err) {
-          str = hash;
-          // alert(`https://kovan.etherscan.io/tx/${hash}`);
-        } else {
-          // alert(err);
-        }
-        callback(hash);
-      });
-    return await str;
-  },
-  depositToken: async function (
-    contract_,
-    tokenContract_,
-    from_,
-    spender_,
-    token_,
-    amount_,
-    callback
-  ) {
-    let str;
-    await tokenContract_.methods
-      .approve(spender_, amount_)
-      .send({ from: from_ }, function (err, hash) {
-        if (!err) {
-          str = hash;
-          // alert(`https://kovan.etherscan.io/tx/${hash}`);
-        } else {
-          // alert(err);
-        }
-        callback(hash);
+  //   return await str;
+  // },
 
-        // slyapa
+  async deposit({ from, token, amount, isEth }) {
+    if (isEth) {
+      return await contract.methods.deposit().send({ from, value: amount });
+    } else {
+      const tokenContract = this.initContract(tokenAbi, token);
+      const sendDeposit = (hash) =>
+        new Promise((resolve) => {
+          const interval = setInterval(async () => {
+            const { blockNumber } = await web3.eth.getTransactionReceipt(hash);
+            if (blockNumber) {
+              clearInterval(interval);
+              const depositHash = await contract.methods
+                .depositToken(token, amount)
+                .send({ from: from });
 
-        var checkTransaction = setInterval(() => {
-          web3.eth.getTransactionReceipt(hash).then((res) => {
-            console.log(res.blockNumber);
-            if (res.blockNumber !== null) {
-              clearInterval(checkTransaction);
-              contract_.methods
-                .depositToken(token_, amount_)
-                .send({ from: from_ }, function (err, hash) {
-                  if (!err) {
-                    str = hash;
-                  } else {
-                    console.log(err);
-                  }
-                  callback(hash);
-                });
+              resolve(depositHash);
             }
-          });
-        }, 3000);
+          }, 3000);
+        });
+      const hash = await tokenContract.methods
+        .approve(exchangeAddress, amount)
+        .send({ from });
 
-        // slyapa end
-      });
-
-    // here is plan b
-
-    // await contract_.methods.depositToken(token_, amount_).send({from:from_},
-    // 	function(err, hash){
-    // 		if (!err){
-    // 			// alert(`https://kovan.etherscan.io/tx/${hash}`);
-    // 			str = hash;
-    // 		} else {
-    // 			// alert(err);
-    // 		}
-    // 		callback(hash);
-    // });
-
-    return await str;
+      return await sendDeposit(hash);
+    }
   },
-  withdrawToken: async function (contract_, from_, token_, amount_, callback) {
-    let str;
-    await contract_.methods
-      .withdrawToken(token_, amount_)
-      .send({ from: from_ }, function (err, hash) {
-        if (!err) {
-          // alert(`https://kovan.etherscan.io/tx/${hash}`);
-          str = hash;
-        } else {
-          // alert(err);
-        }
-        callback(hash);
-      });
-    return await str;
+
+  withdraw({ from, amount, token, isEth }) {
+    if(isEth) {
+      return contract.methods.withdraw(amount).send({ from });
+    } else {
+      return contract.methods.withdrawToken(token, amount).send({ from })
+    }
   },
+
   balanceOf: async function (token_, user_) {
     return await contract.methods.balanceOf(token_, user_).call();
   },
@@ -228,7 +175,8 @@ export default {
       });
     return await str;
   },
-  rsv: function (sig_) {
+
+  rsv(sig_) {
     const sig = sig_.slice(2);
     const r = "0x" + sig.slice(0, 64);
     const s = "0x" + sig.slice(64, 128);
@@ -278,41 +226,37 @@ export default {
   sign(from_, hash_) {
     return web3.eth.personal.sign(hash_, from_);
   },
-
-  async checkSig(hash_, sig_) {
-    return await web3.eth.personal.ecRecover(hash_, sig_);
-  },
-  orderHash(tokenGet_, tokenGive_, amountGet_, amountGive_, expires_, nonce_) {
+  orderHash({ tokenGet, tokenGive, amountGet, amountGive, expires, nonce }) {
     return web3.utils.soliditySha3(
-      tokenGet_,
-      amountGet_,
-      tokenGive_,
-      amountGive_,
-      expires_,
-      nonce_
-    );
-  },
-  async getSign(
-    from_,
-    privateKey_,
-    tokenGet_,
-    tokenGive_,
-    amountGet_,
-    amountGive_,
-    expires_
-  ) {
-    const nonce = Math.floor(Math.random() * 1000000) + 100;
-    const hash = this.orderHash(
-      amountGet_,
-      amountGive_,
-      tokenGet_,
-      tokenGive_,
-      expires_,
+      tokenGet,
+      amountGet,
+      tokenGive,
+      amountGive,
+      expires,
       nonce
     );
-    const sign = privateKey_
-      ? web3.eth.accounts.sign(hash, privateKey_).signature
-      : await this.sign(from_, hash);
+  },
+  async getSign({
+    from,
+    privateKey,
+    tokenGet,
+    tokenGive,
+    amountGet,
+    amountGive,
+    expires,
+  }) {
+    const nonce = Math.floor(Math.random() * 1000000) + 100;
+    const hash = this.orderHash({
+      tokenGet,
+      tokenGive,
+      amountGet,
+      amountGive,
+      expires,
+      nonce,
+    });
+    const sign = privateKey
+      ? web3.eth.accounts.sign(hash, privateKey).signature
+      : await this.sign(from, hash);
     return { hash, sign, nonce };
   },
 

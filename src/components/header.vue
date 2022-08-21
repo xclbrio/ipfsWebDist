@@ -237,7 +237,7 @@ export default {
     metamaskIconClass() {
       return this.metamaskAccount ? "metamask" : "metamask-disconect";
     },
-     pair() {
+    pair() {
       return this.pairs.find((x) => x.path == this.$route.params.id);
     },
     ...mapState(["accounts", "currentAccount"]),
@@ -268,10 +268,6 @@ export default {
       ]).then((res) =>
         res.map((el) => Number(web3.utils.fromWei(el.toString())).toFixed(6))
       );
-    },
-    changeAccount(account) {
-      this.setCurrentAccount(account);
-      this.showBalance();
     },
     ...mapMutations(["setCurrentAccount"]),
   },

@@ -21,7 +21,6 @@ const connectWeb3 = () => {
 }
 
 const web3 = connectWeb3();
-
 const contract = new web3.eth.Contract(exchangeAbi, exchangeAddress)
 
 export default web3

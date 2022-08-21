@@ -37,19 +37,18 @@
           v-for="item in expireses"
           :key="`${item.blockAmount}${isSellOrder ? 'sell' : 'buy'}`"
         >
-          <input
-            class="radio-btn"
-            type="radio"
-            :id="item.title"
-            :value="item.title"
-            v-model="expires"
-          />
           <label
             :class="{ active: expires == item.title }"
             class="expries"
-            :for="item.title"
-            >{{ item.title }}</label
           >
+            <input
+              class="radio-btn"
+              type="radio"
+              :value="item.title"
+              v-model="expires"
+            />
+            {{ item.title }}
+          </label>
         </span>
       </p>
       <div class="button-container">
@@ -130,33 +129,37 @@ export default {
       const [tokenGet, tokenGive] = this.isSellOrder
         ? this.currentPair.tokens.reverse()
         : this.currentPair.tokens;
-      const { sign, hash, nonce } = await exchange.getSign(
-        this.currentAccount.address,
-        this.currentAccount.privateKey,
+      const amountGet = this.isSellOrder ? convertToWei(this.total) : convertToWei(this.amount)
+      const amountGive = this.isSellOrder ? convertToWei(this.amount) : convertToWei(this.total)
+      const { sign, hash, nonce } = await exchange.getSign({
+        from: this.currentAccount.address,
+        privateKey: this.currentAccount.privateKey,
         tokenGet,
         tokenGive,
-        convertToWei(this.total),
-        convertToWei(this.amount),
-        expires
-      );
+        amountGet,
+        amountGive,
+        expires,
+      });
 
-      this.$socket.emit("pushOrder", {
-        orderType: this.isSellOrder ? "sell" : "buy",
+      const orderData = {
+        orderType: this.isSellOrder ? 0 : 1,
         pair: this.currentPair.path,
-        maker: this.currentAccount.address.toLowerCase(),
-        amountGet: convertToWei(this.total),
-        amountGive: convertToWei(this.amount),
+        maker: this.currentAccount.address,
+        amountGet,
+        amountGive,
         tokenGet,
         tokenGive,
         price: this.price,
-        orderFills: convertToWei(this.total),
+        orderFills: amountGet,
         sig: sign,
         expiresTime: Date(),
         nonce,
         expires,
         hash,
         expiresDateTime,
-      });
+      };
+
+      this.$socket.emit("pushOrder", orderData);
     },
   },
 };
